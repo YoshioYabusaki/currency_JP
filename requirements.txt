@@ -1,4 +1,6 @@
 django==3.2.5
+django-extensions
+ipython
 
 # flake8
 flake8==3.9.2
