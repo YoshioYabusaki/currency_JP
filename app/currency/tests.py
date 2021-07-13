@@ -1,3 +1,6 @@
-from django.test import TestCase
+from django.test import TestCase # noqa
 
-# Create your tests here.
+
+# написал для тестирования travis
+def numb():
+    pass
