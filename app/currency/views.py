@@ -1,5 +1,5 @@
+from currency.models import ContactUs, Rate
 from currency.utils import generate_password as gen_pass
-from currency.models import Rate, ContactUs
 
 from django.http import HttpResponse
 
@@ -30,6 +30,10 @@ def contact_us_list(requests):
 
     result = []
     for user in users:
-        result.append(f'Id: {user.id} UserName:{user.user_name} Email:{user.email_form} Subject:{user.subject} Message:{user.message}</br>')
+        result.append(f'Id: {user.id} '
+                      f'UserName:{user.user_name} '
+                      f'Email:{user.email_form} '
+                      f'Subject:{user.subject} '
+                      f'Message:{user.message}</br>')
 
     return HttpResponse(str(result))

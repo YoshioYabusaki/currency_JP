@@ -1,4 +1,4 @@
-from currency.views import generate_password, hello_world, rate_list, contact_us_list
+from currency.views import contact_us_list, generate_password, hello_world, rate_list
 
 from django.contrib import admin
 from django.urls import path
