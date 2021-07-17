@@ -2,10 +2,11 @@ from currency.models import ContactUs, Rate
 from currency.utils import generate_password as gen_pass
 
 from django.http import HttpResponse
+from django.shortcuts import render
 
 
-def hello_world(request):
-    return HttpResponse('Hello World')
+def index(request):
+    return render(request, 'index.html')
 
 
 def generate_password(request):
@@ -14,26 +15,22 @@ def generate_password(request):
     return HttpResponse(password)
 
 
-def rate_list(requests):
+def rate_list(request):
     rates = Rate.objects.all()
-
-    result = []
-    for rate in rates:
-        # breakpoint()
-        result.append(f'Id: {rate.id} Sale:{rate.sale} Buy:{rate.buy}</br>')
-
-    return HttpResponse(str(result))
+    context = {
+        'rate_list': rates,
+    }
+    return render(request, 'rate_list.html', context=context)
 
 
-def contact_us_list(requests):
+def contact_us_list(request):
     users = ContactUs.objects.all()
+    context = {
+        'contact_us_list': users,
+    }
+    return render(request, 'contact_us.html', context=context)
 
-    result = []
-    for user in users:
-        result.append(f'Id: {user.id} '
-                      f'UserName:{user.user_name} '
-                      f'Email:{user.email_form} '
-                      f'Subject:{user.subject} '
-                      f'Message:{user.message}</br>')
 
-    return HttpResponse(str(result))
+def response_codes(request):
+    response = HttpResponse('Status code', status=301, headers={'Location': '/rate/list/'})
+    return response
