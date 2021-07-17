@@ -1,0 +1,32 @@
+{% extends 'base.html' %}
+
+{% block main_content %}
+<table width="1000" border="1">
+  <caption><font size="6" style="color:green"><b>Rate list</b></font></caption>
+
+  <thead>
+    <tr style="color:green" bgcolor="#fff3b8">
+      <th height="45"> ID </th>
+      <th> Created </th>
+      <th> Type </th>
+      <th> Sale </th>
+      <th> Buy </th>
+      <th> Source </th>
+    </tr>
+  </thead>
+
+  <tbody>
+    {% for rate in rate_list %}
+      <tr>
+        <td width="5%" align="center">{{ rate.id }}</td>
+        <td width="28%" align="center">{{ rate.created }}</td>
+        <td width="14%" align="center">{{ rate.type }}</td>
+        <td width="14%" align="center">{{ rate.sale }}</td>
+        <td width="14%" align="center">{{ rate.buy }}</td>
+        <td width="25%" align="center">{{ rate.source }}</td>
+      </tr>
+    {% endfor %}
+  </tbody>
+
+</table>
+{% endblock %}
