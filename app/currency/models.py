@@ -14,3 +14,11 @@ class ContactUs(models.Model):
     email_form = models.EmailField(max_length=254)
     subject = models.CharField(max_length=50)
     message = models.TextField()
+
+
+class GoodCafe(models.Model):
+    cafe_name = models.CharField(max_length=35)
+    open_time = models.CharField(max_length=9)
+    close_time = models.CharField(max_length=9)
+    address = models.CharField(max_length=50)
+    recommended_menu = models.CharField(max_length=50)

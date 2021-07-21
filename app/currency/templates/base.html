@@ -5,16 +5,18 @@
     <meta charset="UTF-8">
     <title>Enjoy Python Lesson!</title>
 </head>
-<body>
+<body bgcolor="#EEEEEE">
+<center>
 
-<font size="6" face="Comic Sans MS">Enjoy Python Lesson!</font>
+    <font size="8" face="Comic Sans MS">Enjoy Python Lesson!</font>
 
-{% include 'includes/navbar.html' %}
+    <p>{% include 'includes/navbar.html' %}</p>
 
-{% block main_content %}
-{% endblock %}
+    {% block main_content %}
+    {% endblock %}
 
-<p>{% include 'includes/footer.html' %}</p>
+    <p>{% include 'includes/footer.html' %}</p>
 
+</center>
 </body>
 </html>

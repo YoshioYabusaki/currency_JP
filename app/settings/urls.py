@@ -1,4 +1,4 @@
-from currency.views import contact_us_list, generate_password, index, rate_list, response_codes
+from currency.views import contact_us_list, generate_password, good_cafe, index, rate_list, response_codes
 
 from django.contrib import admin
 from django.urls import path
@@ -12,5 +12,6 @@ urlpatterns = [
     path('gen-pass/', generate_password),
     path('rate/list/', rate_list),
     path('contact/us/', contact_us_list),
+    path('good/cafe/', good_cafe),
     path('response-codes/', response_codes)
 ]
