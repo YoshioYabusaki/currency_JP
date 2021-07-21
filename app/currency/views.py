@@ -1,4 +1,4 @@
-from currency.models import ContactUs, Rate
+from currency.models import ContactUs, GoodCafe, Rate
 from currency.utils import generate_password as gen_pass
 
 from django.http import HttpResponse
@@ -29,6 +29,25 @@ def contact_us_list(request):
         'contact_us_list': users,
     }
     return render(request, 'contact_us.html', context=context)
+
+
+def good_cafe(request):
+    cafes = GoodCafe.objects.all()
+    context = {
+        'good_cafe_list': cafes,
+    }
+    return render(request, 'good_cafe.html', context=context)
+
+
+
+    # result = []
+    # for cafe in cafes:
+    #     result.append(
+    #         f'cafe:{cafe.cafe_name} open time:{cafe.open_time} close time{cafe.close_time} address:{cafe.address} '
+    #         f'recommended menu:{cafe.recommended_menu}</br>'
+    #     )
+    #
+    # return HttpResponse(str(result))
 
 
 def response_codes(request):

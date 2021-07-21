@@ -1,0 +1,32 @@
+{% extends 'base.html' %}
+
+{% block main_content %}
+<table width="1200" border="1" style="border-collapse: collapse">
+  <caption><font size="6" style="color:green"><b>Good Cafe in Kyiv</b></font></caption>
+
+  <thead>
+    <tr style="color:green" bgcolor="#fff3b8">
+      <th height="50"> Name of cafe </th>
+      <th> Open time </th>
+      <th> Close time </th>
+      <th> recommended menu </th>
+      <th> Address </th>
+    </tr>
+  </thead>
+
+  <tbody>
+    {% for cafe in good_cafe_list %}
+      <tr bgcolor="#FFFFFF">
+        <td align="center">{{ cafe.cafe_name }}</td>
+        <td align="center">{{ cafe.open_time }}</td>
+        <td align="center">{{ cafe.close_time }}</td>
+        <td align="center">{{ cafe.recommended_menu }}</td>
+        <td align="center">{{ cafe.address }}</td>
+
+      </tr>
+    {% endfor %}
+  </tbody>
+
+</table>
+{% endblock %}
+

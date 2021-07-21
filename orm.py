@@ -13,6 +13,9 @@ def dict_factory(cursor, row):
 con.row_factory = dict_factory
 cur = con.cursor()
 
+
+
+# データベースからデータを辞書型で取り出す。辞書型は壊れる心配がなく、データが見やすいから。
 sql_query = '''
 SELECT * FROM customers;
 '''
@@ -28,7 +31,8 @@ con.close()
 
 # 辞書型からオブジェクトに変換する。作業しやすいから。 object
 class Customer:
-    def __init__(self, first_name, last_name):
+    def __init__(self, first_name, last_name): #初期化する
+        #　属性
         self.first_name = first_name
         self.last_name = last_name
 

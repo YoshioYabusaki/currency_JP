@@ -1,12 +1,12 @@
 {% extends 'base.html' %}
 
 {% block main_content %}
-<table width="1100" border="1">
+<table width="1100" border="1" style="border-collapse: collapse">
   <caption><font size="6" style="color:green"><b>Contact us</b></font></caption>
 
   <thead>
     <tr style="color:green" bgcolor="#fff3b8">
-      <th height="45"> ID </th>
+      <th height="50"> ID </th>
       <th> User name </th>
       <th> Email </th>
       <th> Subject </th>
@@ -16,7 +16,7 @@
 
   <tbody>
   {% for user in contact_us_list %}
-    <tr>
+    <tr bgcolor="#FFFFFF">
       <td width="5%" align="center">{{ user.id }}</td>
       <td width="14%" align="center">{{ user.user_name }}</td>
       <td width="24%" align="center">{{ user.email_form }}</td>
@@ -28,3 +28,5 @@
 
 </table>
 {% endblock %}
+
+</font>

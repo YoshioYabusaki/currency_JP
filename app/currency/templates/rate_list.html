@@ -1,12 +1,12 @@
 {% extends 'base.html' %}
 
 {% block main_content %}
-<table width="1000" border="1">
+<table width="1000" border="1" style="border-collapse: collapse">
   <caption><font size="6" style="color:green"><b>Rate list</b></font></caption>
 
   <thead>
     <tr style="color:green" bgcolor="#fff3b8">
-      <th height="45"> ID </th>
+      <th height="50"> ID </th>
       <th> Created </th>
       <th> Type </th>
       <th> Sale </th>
@@ -17,7 +17,7 @@
 
   <tbody>
     {% for rate in rate_list %}
-      <tr>
+      <tr bgcolor="#FFFFFF">
         <td width="5%" align="center">{{ rate.id }}</td>
         <td width="28%" align="center">{{ rate.created }}</td>
         <td width="14%" align="center">{{ rate.type }}</td>
