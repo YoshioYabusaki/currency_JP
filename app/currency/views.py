@@ -39,17 +39,6 @@ def good_cafe(request):
     return render(request, 'good_cafe.html', context=context)
 
 
-
-    # result = []
-    # for cafe in cafes:
-    #     result.append(
-    #         f'cafe:{cafe.cafe_name} open time:{cafe.open_time} close time{cafe.close_time} address:{cafe.address} '
-    #         f'recommended menu:{cafe.recommended_menu}</br>'
-    #     )
-    #
-    # return HttpResponse(str(result))
-
-
 def response_codes(request):
     response = HttpResponse('Status code', status=301, headers={'Location': '/rate/list/'})
     return response

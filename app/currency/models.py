@@ -22,4 +22,3 @@ class GoodCafe(models.Model):
     close_time = models.CharField(max_length=9)
     address = models.CharField(max_length=50)
     recommended_menu = models.CharField(max_length=50)
-
