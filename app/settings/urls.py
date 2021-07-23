@@ -1,7 +1,7 @@
 from currency.views import (
     contact_us_list, generate_password, good_cafe,
-    index, rate_list, response_codes, rate_create,
-    rate_details, rate_update, rate_delete,
+    index, rate_create, rate_delete, rate_details,
+    rate_list, rate_update, response_codes,
 )
 
 from django.contrib import admin

@@ -1,9 +1,9 @@
-from currency.models import ContactUs, GoodCafe, Rate
 from currency.forms import RateForm
+from currency.models import ContactUs, GoodCafe, Rate
 from currency.utils import generate_password as gen_pass
 
-from django.http import HttpResponse, HttpResponseRedirect, Http404
-from django.shortcuts import render, get_object_or_404
+from django.http import HttpResponse, HttpResponseRedirect
+from django.shortcuts import get_object_or_404, render
 
 
 def index(request):
@@ -24,14 +24,14 @@ def rate_list(request):
     return render(request, 'rate_list.html', context=context)
 
 
-def rate_create(request): # スタンダードなフォームのテキスト
+def rate_create(request):  # スタンダードなフォームのテキスト
     if request.method == 'POST':
-        form = RateForm(request.POST) # 記入されたらフォーム内容を表示
+        form = RateForm(request.POST)  # 記入されたらフォーム内容を表示
         if form.is_valid():
-            form.save() #　フォーム内容を保存
+            form.save()  # フォーム内容を保存
             return HttpResponseRedirect('/rate/list/')
     elif request.method == 'GET':
-        form = RateForm() # 最初は空白のフォーム
+        form = RateForm()  # 最初は空白のフォーム
     context = {
         'form': form,
     }
@@ -51,12 +51,12 @@ def rate_update(request, rate_id):
     rate = get_object_or_404(Rate, id=rate_id)
 
     if request.method == 'POST':
-        form = RateForm(request.POST, instance=rate) # 元からinstanceの値rateを表示
+        form = RateForm(request.POST, instance=rate)  # 元からinstanceの値rateを表示
         if form.is_valid():
-            form.save() #　フォーム内容を保存
+            form.save()  # フォーム内容を保存
             return HttpResponseRedirect('/rate/list/')
     elif request.method == 'GET':
-        form = RateForm(instance=rate) # 元からinstanceの値rateを表示
+        form = RateForm(instance=rate)  # 元からinstanceの値rateを表示
 
     context = {
         'form': form,
