@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 
 {% block main_content %}
-<table width="1100" border="1" style="border-collapse: collapse">
+<table width="1200" border="1" style="border-collapse: collapse">
   <caption><font size="6" style="color:green"><b>Rate list</b></font></caption>
 
   <a href="/rate/create/">Create Rate</a>
@@ -15,7 +15,7 @@
       <th> Sale </th>
       <th> Buy </th>
       <th> Created </th>
-      <th> Info </th>
+      <th> Details </th>
       <th> Update </th>
       <th> Delete </th>
     </tr>
@@ -30,9 +30,9 @@
         <td width="10%" align="center">{{ rate.sale }}</td>
         <td width="10%" align="center">{{ rate.buy }}</td>
         <td width="24%" align="center">{{ rate.created }}</td>
-        <td width="7%" align="center"><a href="/rate/details/{{ rate.id }}/">Details</a></td>
-        <td width="7%" align="center"><a href="/rate/update/{{ rate.id }}/">Update</a></td>
-        <td width="7%" align="center"><a href="/rate/delete/{{ rate.id }}/">Delete</a></td>
+        <td width="7%" align="center"><a href="/rate/details/{{ rate.id }}/">details</a></td>
+        <td width="7%" align="center"><a href="/rate/update/{{ rate.id }}/">update</a></td>
+        <td width="7%" align="center"><a href="/rate/delete/{{ rate.id }}/">delete</a></td>
       </tr>
     {% endfor %}
   </tbody>
