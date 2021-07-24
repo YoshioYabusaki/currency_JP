@@ -1,0 +1,12 @@
+{% extends 'base.html' %}
+
+{% block main_content %}
+
+<font size="5" style="color:red">Are you sure you want to delete the source with ID: {{ object.id }} ?</font>
+
+<form method="post">
+  {% csrf_token %}
+  <button type="submit" style="color:red">Click here to Delete</button>
+</form>
+
+{% endblock %}

@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+
+{% block main_content %}
+<table width="1200" border="1" style="border-collapse: collapse">
+  <caption><font size="6" style="color:green"><b>Source list</b></font></caption>
+
+  <a href="/source/create/">Create Source</a>
+  <br>
+
+  <thead>
+    <tr style="color:green" bgcolor="#fff3b8">
+      <th height="50"> ID </th>
+      <th> Bank name </th>
+      <th> Bank URL </th>
+      <th> Details </th>
+      <th> Update </th>
+      <th> Delete </th>
+    </tr>
+  </thead>
+
+  <tbody>
+    {% for source in source_list %}
+      <tr bgcolor="#FFFFFF">
+        <td width="5%" align="center">{{ source.id }}</td>
+        <td width="24%" align="center">{{ source.name }}</td>
+        <td width="53%" align="center">{{ source.source_url }}</td>
+        <td width="6%" align="center"><a href="/source/details/{{ source.id }}/">details</a></td>
+        <td width="6%" align="center"><a href="/source/update/{{ source.id }}/">update</a></td>
+        <td width="6%" align="center"><a href="/source/delete/{{ source.id }}/">delete</a></td>
+      </tr>
+    {% endfor %}
+  </tbody>
+
+</table>
+{% endblock %}
