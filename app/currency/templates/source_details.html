@@ -1,0 +1,12 @@
+{% extends 'base.html' %}
+
+{% block main_content %}
+
+<caption><font size="6" style="color:green"><b>Source Details</b></font></caption>
+<br>
+
+ID: {{ object.id }}<br>
+Bank name: {{ object.name }}<br>
+Bank URL: {{ object.source_url }}<br>
+
+{% endblock %}
