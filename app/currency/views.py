@@ -2,7 +2,7 @@ from currency.forms import RateForm, SourceForm
 from currency.models import ContactUs, GoodCafe, Rate, Source
 from currency.utils import generate_password as gen_pass
 
-from django.http import HttpResponse, HttpResponseRedirect, Http404
+from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import get_object_or_404, render
 
 
@@ -133,7 +133,7 @@ def source_delete(request, source_id):
 
     if request.method == 'POST':
         source.delete()
-        return  HttpResponseRedirect('/source/list/')
+        return HttpResponseRedirect('/source/list/')
     context = {
         'object': source,
     }
