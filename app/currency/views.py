@@ -2,12 +2,12 @@ from currency.forms import RateForm, SourceForm
 from currency.models import ContactUs, GoodCafe, Rate, Source
 from currency.utils import generate_password as gen_pass
 
-from django.urls import reverse_lazy
 from django.http import HttpResponse, HttpResponseRedirect
+from django.urls import reverse_lazy
+from django.shortcuts import get_object_or_404, render
 from django.views.generic import (
     CreateView, DeleteView, DetailView, ListView, TemplateView, UpdateView
 )
-from django.shortcuts import get_object_or_404, render
 
 
 class GeneratePasswordView(TemplateView):
