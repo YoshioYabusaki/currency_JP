@@ -14,7 +14,7 @@ class RateForm(forms.ModelForm):
         )
 
 
-class SourceForm(forms.ModelForm):  # 名前は慣例的にこう書く。制限などのルールはモデルに書く
+class SourceForm(forms.ModelForm):  # 名前は慣例的にこう書く。文字数制限などのルールはモデルに書く
     class Meta:
         model = Source  # テーブル名
         fields = (
