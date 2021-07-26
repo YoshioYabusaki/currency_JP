@@ -1,6 +1,7 @@
 from currency.views import (
-    contact_us_list, GeneratePasswordView, good_cafe,
-    RateCreateView, RateDeleteView, RateDetailView, RateListView, RateUpdateView, response_codes,
+    GeneratePasswordView,
+    RateCreateView, RateDeleteView, RateDetailView, RateListView, RateUpdateView,
+    contact_us_list, good_cafe, response_codes,
     source_create, source_delete, source_details, source_list, source_update
 )
 
