@@ -4,78 +4,50 @@ from currency.utils import generate_password as gen_pass
 
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import get_object_or_404, render
+from django.urls import reverse_lazy
+from django.views.generic import (
+    CreateView, DeleteView, DetailView, ListView, TemplateView, UpdateView
+)
 
 
-def index(request):
-    return render(request, 'index.html')
+class GeneratePasswordView(TemplateView):
+    template_name = 'generate_password.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        password_len = int(self.request.GET.get('password-len'))
+        context['password'] = gen_pass(password_len)
+        return context
 
 
-def generate_password(request):
-    password_len = int(request.GET.get('password-len'))
-    password = gen_pass(password_len)
-    return HttpResponse(password)
+class RateListView(ListView):  # ListView関数を使うと簡単に書ける
+    queryset = Rate.objects.all()
+    template_name = 'rate_list.html'  # templatesフォルダにcurrencyフォルダ作り、このhtmlを入れれば本行書く必要なし。しかし。
 
 
-def rate_list(request):
-    rates = Rate.objects.all()
-    context = {
-        'rate_list': rates,
-    }
-    return render(request, 'rate_list.html', context=context)
+class RateCreateView(CreateView):
+    queryset = Rate.objects.all()
+    form_class = RateForm  # クラスのように書くので()は必要ない
+    success_url = reverse_lazy('currency:rate-list')  # 最初は見逃すけど次にリクエストがあったらやるよというlazy, Djangoではよくやる方法
+    template_name = 'rate_create.html'
 
 
-def rate_create(request):  # スタンダードなフォームのテキスト
-    if request.method == 'POST':
-        form = RateForm(request.POST)  # 記入されたらフォーム内容を表示
-        if form.is_valid():
-            form.save()  # フォーム内容を保存
-            return HttpResponseRedirect('/rate/list/')
-    elif request.method == 'GET':
-        form = RateForm()  # 最初は空白のフォーム
-    context = {
-        'form': form,
-    }
-    # breakpoint()
-    return render(request, 'rate_create.html', context=context)
+class RateDetailView(DetailView):
+    queryset = Rate.objects.all()
+    template_name = 'rate_details.html'
 
 
-def rate_details(request, rate_id):
-    rate = get_object_or_404(Rate, id=rate_id)
-    context = {
-        'object': rate,
-    }
-    return render(request, 'rate_details.html', context=context)
+class RateUpdateView(UpdateView):
+    queryset = Rate.objects.all()
+    form_class = RateForm  # クラスのように書くので()は必要ない
+    success_url = reverse_lazy('currency:rate-list')  # 上手くいったら保存の上どこに移るか
+    template_name = 'rate_update.html'
 
 
-def rate_update(request, rate_id):
-    rate = get_object_or_404(Rate, id=rate_id)
-
-    if request.method == 'POST':
-        form = RateForm(request.POST, instance=rate)  # 元からinstanceの値rateを表示
-        if form.is_valid():
-            form.save()  # フォーム内容を保存
-            return HttpResponseRedirect('/rate/list/')
-    elif request.method == 'GET':
-        form = RateForm(instance=rate)  # 元からinstanceの値rateを表示
-
-    context = {
-        'form': form,
-    }
-    return render(request, 'rate_update.html', context=context)
-
-
-def rate_delete(request, rate_id):
-    rate = get_object_or_404(Rate, id=rate_id)
-
-    if request.method == 'POST':
-        rate.delete()
-        return HttpResponseRedirect('/rate/list/')
-
-    # if request.method == 'GET' #ここでは敢えて書く必要がない
-    context = {
-        'object': rate,
-    }
-    return render(request, 'rate_delete.html', context=context)
+class RateDeleteView(DeleteView):
+    queryset = Rate.objects.all()
+    success_url = reverse_lazy('currency:rate-list')
+    template_name = 'rate_delete.html'
 
 
 def source_list(request):
@@ -159,3 +131,74 @@ def good_cafe(request):
 def response_codes(request):
     response = HttpResponse('Status code', status=301, headers={'Location': '/rate/list/'})
     return response
+
+
+# def rate_list(request):
+#     rates = Rate.objects.all()
+#     context = {
+#         'rate_list': rates,
+#     }
+#     return render(request, 'rate_list.html', context=context)
+
+
+# def rate_create(request):  # ↓スタンダードなフォームのテキスト
+#     if request.method == 'POST':
+#         form = RateForm(request.POST)  # 記入されたらフォーム内容を表示
+#         if form.is_valid():
+#             form.save()  # フォーム内容を保存
+#             return HttpResponseRedirect('/rate/list/')
+#     elif request.method == 'GET':
+#         form = RateForm()  # 最初は空白のフォーム
+#     context = {
+#         'form': form,
+#     }
+#     # breakpoint()
+#     return render(request, 'rate_create.html', context=context)
+
+
+# def rate_details(request, rate_id):
+#     rate = get_object_or_404(Rate, id=rate_id)
+#     context = {
+#         'object': rate,
+#     }
+#     return render(request, 'rate_details.html', context=context)
+
+
+# def rate_update(request, rate_id):
+#     rate = get_object_or_404(Rate, id=rate_id)
+#
+#     if request.method == 'POST':
+#         form = RateForm(request.POST, instance=rate)  # 元からinstanceの値rateを表示
+#         if form.is_valid():
+#             form.save()  # フォーム内容を保存
+#             return HttpResponseRedirect('/rate/list/')
+#     elif request.method == 'GET':
+#         form = RateForm(instance=rate)  # 元からinstanceの値rateを表示
+#
+#     context = {
+#         'form': form,
+#     }
+#     return render(request, 'rate_update.html', context=context)
+
+
+# def rate_delete(request, rate_id):
+#     rate = get_object_or_404(Rate, id=rate_id)
+#
+#     if request.method == 'POST':
+#         rate.delete()
+#         return HttpResponseRedirect('/rate/list/')
+#     # if request.method == 'GET' #ここでは敢えて書く必要がない
+#     context = {
+#         'object': rate,
+#     }
+#     return render(request, 'rate_delete.html', context=context)
+
+
+# def index(request):
+#     return render(request, 'index.html')
+
+
+# def generate_password(request):
+#     password_len = int(request.GET.get('password-len'))
+#     password = gen_pass(password_len)
+#     return HttpResponse(password)
