@@ -1,8 +1,8 @@
 from currency.views import (
     GeneratePasswordView,
     RateCreateView, RateDeleteView, RateDetailView, RateListView, RateUpdateView,
-    contact_us_list, good_cafe, response_codes,
-    SourceCreateView, SourceDeleteView, SourceDetailView, SourceListView, SourceUpdateView
+    SourceCreateView, SourceDeleteView, SourceDetailView, SourceListView, SourceUpdateView,
+    contact_us_list, good_cafe, response_codes
 )
 
 from django.urls import path
