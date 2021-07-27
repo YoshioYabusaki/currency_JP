@@ -4,7 +4,7 @@
 <table width="1200" border="1" style="border-collapse: collapse">
   <caption><font size="6" style="color:green"><b>Source list</b></font></caption>
 
-  <a href="/source/create/">Create Source</a>
+  <a href="{% url 'currency:source-create' %}">Create Source</a>
   <br>
 
   <thead>
@@ -19,14 +19,14 @@
   </thead>
 
   <tbody>
-    {% for source in source_list %}
+    {% for source in source_list %}  <!-- 左source_listはviewsで以前作っていた関数名source_listとは無関係（偶然一緒だった） -->
       <tr bgcolor="#FFFFFF">
         <td width="5%" align="center">{{ source.id }}</td>
         <td width="24%" align="center">{{ source.name }}</td>
         <td width="53%" align="center">{{ source.source_url }}</td>
-        <td width="6%" align="center"><a href="/source/details/{{ source.id }}/">details</a></td>
-        <td width="6%" align="center"><a href="/source/update/{{ source.id }}/">update</a></td>
-        <td width="6%" align="center"><a href="/source/delete/{{ source.id }}/">delete</a></td>
+        <td width="6%" align="center"><a href="{% url 'currency:source-details' source.pk %}">details</a></td>    <!-- pkはID-->
+        <td width="6%" align="center"><a href="{% url 'currency:source-update' source.pk %}">update</a></td>
+        <td width="6%" align="center"><a href="{% url 'currency:source-delete' source.pk %}">delete</a></td>
       </tr>
     {% endfor %}
   </tbody>

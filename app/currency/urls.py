@@ -2,7 +2,7 @@ from currency.views import (
     GeneratePasswordView,
     RateCreateView, RateDeleteView, RateDetailView, RateListView, RateUpdateView,
     contact_us_list, good_cafe, response_codes,
-    source_create, source_delete, source_details, source_list, source_update
+    SourceCreateView, SourceDeleteView, SourceDetailView, SourceListView, SourceUpdateView
 )
 
 from django.urls import path
@@ -16,11 +16,11 @@ urlpatterns = [
     path('rate/update/<int:pk>/', RateUpdateView.as_view(), name='rate-update'),  # これら三つを最初から書くようになろう
     path('rate/delete/<int:pk>/', RateDeleteView.as_view(), name='rate-delete'),
 
-    path('source/list/', source_list),
-    path('source/create/', source_create),
-    path('source/details/<int:source_id>/', source_details),  # idをパスの一部に↓
-    path('source/update/<int:source_id>/', source_update),
-    path('source/delete/<int:source_id>/', source_delete),
+    path('source/list/', SourceListView.as_view(), name='source-list'),
+    path('source/create/', SourceCreateView.as_view(), name='source-create'),
+    path('source/details/<int:pk>/', SourceDetailView.as_view(), name='source-details'),  # idをパスの一部に↓<int:pk>
+    path('source/update/<int:pk>/', SourceUpdateView.as_view(), name='source-update'),
+    path('source/delete/<int:pk>/', SourceDeleteView.as_view(), name='source-delete'),
 
     path('contact/us/', contact_us_list),
     path('good/cafe/', good_cafe),
