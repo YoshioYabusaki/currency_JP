@@ -2,8 +2,8 @@ from currency.forms import RateForm, SourceForm
 from currency.models import ContactUs, GoodCafe, Rate, Source
 from currency.utils import generate_password as gen_pass
 
-from django.http import HttpResponse, HttpResponseRedirect
-from django.shortcuts import get_object_or_404, render
+from django.http import HttpResponse
+from django.shortcuts import render
 from django.urls import reverse_lazy
 from django.views.generic import (
     CreateView, DeleteView, DetailView, ListView, TemplateView, UpdateView
@@ -20,7 +20,8 @@ class GeneratePasswordView(TemplateView):
         return context
 
 
-class RateListView(ListView):  # ListView関数を使うと簡単に書ける
+# CRUD операции для модели Rate
+class RateListView(ListView):  # ListView関数を使うと、以下簡単に書ける
     queryset = Rate.objects.all()
     template_name = 'rate_list.html'  # templatesフォルダにcurrencyフォルダ作り、このhtmlを入れれば本行書く必要なし。しかし。
 
@@ -50,66 +51,35 @@ class RateDeleteView(DeleteView):
     template_name = 'rate_delete.html'
 
 
-def source_list(request):
-    source = Source.objects.all()
-    context = {
-        'source_list': source,
-    }
-    return render(request, 'source_list.html', context=context)
+# CRUD операции для модели Source
+class SourceListView(ListView):
+    queryset = Source.objects.all()
+    template_name = 'source_list.html'
 
 
-def source_create(request):
-    if request.method == 'POST':  # サーバにデータを送る
-        form = SourceForm(request.POST)  # フォームのオブジェクトを作り、コンテクストに送る↓
-        if form.is_valid():  # フォーム内容を検証する
-            form.save()  # フォーム内容を保存
-            return HttpResponseRedirect('/source/list/')
-    elif request.method == 'GET':  # サーバからデータを得る
-        form = SourceForm()  # 最初は空白のフォーム
-    context = {
-        'form': form,
-    }
-    return render(request, 'source_create.html', context=context)  # templateに送る
+class SourceCreateView(CreateView):
+    queryset = Source.objects.all()
+    form_class = SourceForm
+    success_url = reverse_lazy('currency:source-list')
+    template_name = 'source_create.html'
 
 
-def source_details(request, source_id):
-    # try:
-    #     source = Source.objects.get(id=source_id)  # DBからひとつのオブジェクトを取り出す
-    # except Source.DoesNotExist as exc:
-    #     raise Http404(exc)
-    source = get_object_or_404(Source, id=source_id)  # 上記4行と全く同じ機能
-    context = {
-        'object': source,
-    }
-    return render(request, 'source_details.html', context=context)
+class SourceDetailView(DetailView):
+    queryset = Source.objects.all()
+    template_name = 'source_details.html'
 
 
-def source_update(request, source_id):  # フォームとオブジェクトを融合させる
-    source = get_object_or_404(Source, id=source_id)  # オブジェクトを得て
-
-    if request.method == 'POST':  # サーバにデータを送る
-        form = SourceForm(request.POST, instance=source)  # 元から値が入っているように
-        if form.is_valid():  # フォーム内容を検証する
-            form.save()  # フォーム内容を保存
-            return HttpResponseRedirect('/source/list/')
-    elif request.method == 'GET':  # サーバからデータを得る
-        form = SourceForm(instance=source)  # 元から値が入っているように
-    context = {
-        'form': form,
-    }
-    return render(request, 'source_update.html', context=context)
+class SourceUpdateView(UpdateView):
+    queryset = Source.objects.all()
+    form_class = SourceForm
+    success_url = reverse_lazy('currency:source-list')
+    template_name = 'source_update.html'
 
 
-def source_delete(request, source_id):
-    source = get_object_or_404(Source, id=source_id)
-
-    if request.method == 'POST':
-        source.delete()
-        return HttpResponseRedirect('/source/list/')
-    context = {
-        'object': source,
-    }
-    return render(request, 'source_delete.html', context=context)
+class SourceDeleteView(DeleteView):
+    queryset = Source.objects.all()
+    success_url = reverse_lazy('currency:source-list')
+    template_name = 'source_delete.html'
 
 
 def contact_us_list(request):
@@ -202,3 +172,65 @@ def response_codes(request):
 #     password_len = int(request.GET.get('password-len'))
 #     password = gen_pass(password_len)
 #     return HttpResponse(password)
+
+
+# def source_list(request):
+#     source = Source.objects.all()
+#     context = {
+#         'source_list': source,
+#     }
+#     return render(request, 'source_list.html', context=context)
+
+
+# def source_create(request):
+#     if request.method == 'POST':  # サーバにデータを送る
+#         form = SourceForm(request.POST)  # フォームのオブジェクトを作り、コンテクストに送る↓
+#         if form.is_valid():  # フォーム内容を検証する
+#             form.save()  # フォーム内容を保存
+#             return HttpResponseRedirect('/source/list/')
+#     elif request.method == 'GET':  # サーバからデータを得る
+#         form = SourceForm()  # 最初は空白のフォーム
+#     context = {
+#         'form': form,
+#     }
+#     return render(request, 'source_create.html', context=context)  # templateに送る
+
+
+# def source_details(request, source_id):
+#     # try:
+#     #     source = Source.objects.get(id=source_id)  # DBからひとつのオブジェクトを取り出す
+#     # except Source.DoesNotExist as exc:
+#     #     raise Http404(exc)
+#     source = get_object_or_404(Source, id=source_id)  # 上記4行と全く同じ機能
+#     context = {
+#         'object': source,
+#     }
+#     return render(request, 'source_details.html', context=context)
+
+
+# def source_update(request, source_id):  # フォームとオブジェクトを融合させる
+#     source = get_object_or_404(Source, id=source_id)  # オブジェクトを得て
+#
+#     if request.method == 'POST':  # サーバにデータを送る
+#         form = SourceForm(request.POST, instance=source)  # 元から値が入っているように
+#         if form.is_valid():  # フォーム内容を検証する
+#             form.save()  # フォーム内容を保存
+#             return HttpResponseRedirect('/source/list/')
+#     elif request.method == 'GET':  # サーバからデータを得る
+#         form = SourceForm(instance=source)  # 元から値が入っているように
+#     context = {
+#         'form': form,
+#     }
+#     return render(request, 'source_update.html', context=context)
+
+
+# def source_delete(request, source_id):
+#     source = get_object_or_404(Source, id=source_id)
+#
+#     if request.method == 'POST':
+#         source.delete()
+#         return HttpResponseRedirect('/source/list/')
+#     context = {
+#         'object': source,
+#     }
+#     return render(request, 'source_delete.html', context=context)

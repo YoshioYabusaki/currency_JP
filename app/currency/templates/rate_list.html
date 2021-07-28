@@ -23,7 +23,7 @@
   </thead>
 
   <tbody>
-    {% for rate in rate_list %}
+    {% for rate in rate_list %}  <!-- 左rate_listはviewsで以前作っていた関数名とは無関係（偶然一緒だった） -->
       <tr bgcolor="#FFFFFF">
         <td width="5%" align="center">{{ rate.id }}</td>
         <td width="20%" align="center">{{ rate.source }}</td>

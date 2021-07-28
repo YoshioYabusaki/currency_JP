@@ -12,6 +12,7 @@ urlpatterns = [
 
     # ここには他のアプリのURL集を加える
     path('currency/', include('currency.urls')),  # currency.urlsにあるcurrency/で始まる全てのurlがここに集まる
+    # これは書いた時点で、currency内のhtml内のurlsも書き変える必要がある。
 
     path('__debug__/', include(debug_toolbar.urls)),
 ]
