@@ -15,7 +15,7 @@
   </thead>
 
   <tbody>
-    {% for cafe in good_cafe_list %}
+    {% for cafe in object_list %}
       <tr bgcolor="#FFFFFF">
         <td align="center">{{ cafe.cafe_name }}</td>
         <td align="center">{{ cafe.open_time }}</td>
@@ -28,4 +28,3 @@
 
 </table>
 {% endblock %}
-

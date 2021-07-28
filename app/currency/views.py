@@ -3,7 +3,6 @@ from currency.models import ContactUs, GoodCafe, Rate, Source
 from currency.utils import generate_password as gen_pass
 
 from django.http import HttpResponse
-from django.shortcuts import render
 from django.urls import reverse_lazy
 from django.views.generic import (
     CreateView, DeleteView, DetailView, ListView, TemplateView, UpdateView
@@ -82,20 +81,14 @@ class SourceDeleteView(DeleteView):
     template_name = 'source_delete.html'
 
 
-def contact_us_list(request):
-    users = ContactUs.objects.all()
-    context = {
-        'contact_us_list': users,
-    }
-    return render(request, 'contact_us.html', context=context)
+class ContactUsListView(ListView):
+    queryset = ContactUs.objects.all()
+    template_name = 'contact_us.html'
 
 
-def good_cafe(request):
-    cafes = GoodCafe.objects.all()
-    context = {
-        'good_cafe_list': cafes,
-    }
-    return render(request, 'good_cafe.html', context=context)
+class GoodCafeListView(ListView):
+    queryset = GoodCafe.objects.all()
+    template_name = 'good_cafe.html'
 
 
 def response_codes(request):
@@ -234,3 +227,19 @@ def response_codes(request):
 #         'object': source,
 #     }
 #     return render(request, 'source_delete.html', context=context)
+
+
+# def contact_us_list(request):
+#     users = ContactUs.objects.all()
+#     context = {
+#         'contact_us_list': users,
+#     }
+#     return render(request, 'contact_us.html', context=context)
+
+
+# def good_cafe(request):
+#     cafes = GoodCafe.objects.all()
+#     context = {
+#         'good_cafe_list': cafes,
+#     }
+#     return render(request, 'good_cafe.html', context=context)

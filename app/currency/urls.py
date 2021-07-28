@@ -1,8 +1,8 @@
 from currency.views import (
-    GeneratePasswordView,
+    ContactUsListView, GeneratePasswordView, GoodCafeListView,
     RateCreateView, RateDeleteView, RateDetailView, RateListView, RateUpdateView,
     SourceCreateView, SourceDeleteView, SourceDetailView, SourceListView, SourceUpdateView,
-    contact_us_list, good_cafe, response_codes
+    response_codes
 )
 
 from django.urls import path
@@ -22,9 +22,9 @@ urlpatterns = [
     path('source/update/<int:pk>/', SourceUpdateView.as_view(), name='source-update'),
     path('source/delete/<int:pk>/', SourceDeleteView.as_view(), name='source-delete'),
 
-    path('contact/us/', contact_us_list),
-    path('good/cafe/', good_cafe),
-    path('response-codes/', response_codes),
+    path('contact/us/', ContactUsListView.as_view(), name='contact-us-list'),
+    path('good/cafe/', GoodCafeListView.as_view(), name='good-cafe-list'),
+    path('response-codes/', response_codes),  # パス名とviewsで作った関数名
     path('gen-pass/', GeneratePasswordView.as_view()),
 
     # path('rate/list/', rate_list),
