@@ -15,7 +15,7 @@
   </thead>
 
   <tbody>
-  {% for user in contact_us_list %}
+  {% for user in object_list %}  <!--  DjDT内Templatesを参照し、object_listと編集した-->
     <tr bgcolor="#FFFFFF">
       <td width="5%" align="center">{{ user.id }}</td>
       <td width="14%" align="center">{{ user.user_name }}</td>
@@ -28,5 +28,3 @@
 
 </table>
 {% endblock %}
-
-</font>
