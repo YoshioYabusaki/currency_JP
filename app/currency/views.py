@@ -230,8 +230,8 @@ def response_codes(request):
 
 
 # def contact_us_list(request):
-#     users = ContactUs.objects.all()
-#     context = {
+#     users = ContactUs.objects.all()  # ここで得たデータを、
+#     context = {  # 辞書型に変換し、下のrenderでhtmlに渡す
 #         'contact_us_list': users,
 #     }
 #     return render(request, 'contact_us.html', context=context)
