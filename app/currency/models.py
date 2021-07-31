@@ -16,9 +16,10 @@ class Source(models.Model):
 
 class ContactUs(models.Model):
     user_name = models.CharField(max_length=35)
-    email_form = models.EmailField(max_length=254)
+    email_form = models.EmailField()
     subject = models.CharField(max_length=50)
-    message = models.TextField()
+    message = models.CharField(max_length=2050)
+    created = models.DateTimeField(auto_now_add=True)
 
 
 class GoodCafe(models.Model):
