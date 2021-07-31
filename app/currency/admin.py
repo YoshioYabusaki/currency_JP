@@ -42,6 +42,7 @@ class ContactUsAdmin(admin.ModelAdmin):
     def has_delete_permission(self, request, obj=None):  # запретить удалть
         return False
 
+
 admin.site.register(ContactUs, ContactUsAdmin)
 
 
@@ -72,6 +73,7 @@ class RateAdmin(ImportExportModelAdmin):
     def has_delete_permission(self, request, obj=None):
         return False
 
+
 admin.site.register(Rate, RateAdmin)
 
 
@@ -86,6 +88,7 @@ class SourceAdmin(ImportExportModelAdmin):
         'name',
         'source_url',
     )
+
 
 admin.site.register(Source, SourceAdmin)
 
@@ -105,5 +108,6 @@ class GoodCafeAdmin(ImportExportModelAdmin):
         'address',
         'recommended_menu',
     )
+
 
 admin.site.register(GoodCafe, GoodCafeAdmin)
