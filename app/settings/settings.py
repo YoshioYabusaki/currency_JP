@@ -25,6 +25,8 @@ INSTALLED_APPS = [
 
     'django_extensions',
     'debug_toolbar',
+    'rangefilter',
+    'import_export',
 
     'currency',  # それぞれのмодульのurls集を独自に作ること。後の混乱を防ぐ。
 ]
@@ -120,3 +122,12 @@ INTERNAL_IPS = [
     '127.0.0.1',
     '172.31.69.226',
 ]
+
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'  # どのようにemailを送るか
+# EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'  # コンソールで表示、実際には送られない
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_USE_TLS = True
+EMAIL_PORT = 587
+EMAIL_HOST_USER = 'python.test.yoshio@gmail.com'  # от кого
+EMAIL_HOST_PASSWORD = 'pythontest'
+SUPPORT_EMAIL = 'python.test.yoshio@gmail.com'  # получатель この場合サポートセンター

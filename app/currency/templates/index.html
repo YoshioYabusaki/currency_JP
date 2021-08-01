@@ -4,7 +4,8 @@
 <div>
     <a href="{% url 'currency:rate-list' %}">Rate List</a><br>  <!-- urls.pyで作ったreverse(name)を使い引き継ぐ -->
     <a href="{% url 'currency:source-list' %}">Source List</a><br>
-    <a href="{% url 'currency:contact-us-list' %}">Contact Us</a><br>
+    <a href="{% url 'currency:contact-us-list' %}">Contact Us List</a><br>
+    <a href="{% url 'currency:contact-us-create' %}">Contact Us Create</a><br>
     <a href="{% url 'currency:good-cafe-list' %}">Good Cafe in Kyiv</a><br>
 </div>
 {% endblock %}

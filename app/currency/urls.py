@@ -1,5 +1,5 @@
 from currency.views import (
-    ContactUsListView, GeneratePasswordView, GoodCafeListView,
+    ContactUsCreateView, ContactUsListView, GeneratePasswordView, GoodCafeListView,
     RateCreateView, RateDeleteView, RateDetailView, RateListView, RateUpdateView,
     SourceCreateView, SourceDeleteView, SourceDetailView, SourceListView, SourceUpdateView,
     response_codes
@@ -23,6 +23,8 @@ urlpatterns = [
     path('source/delete/<int:pk>/', SourceDeleteView.as_view(), name='source-delete'),
 
     path('contact/us/', ContactUsListView.as_view(), name='contact-us-list'),
+    path('contact/us/create/', ContactUsCreateView.as_view(), name='contact-us-create'),
+
     path('good/cafe/', GoodCafeListView.as_view(), name='good-cafe-list'),
     path('response-codes/', response_codes),  # パス名とviewsで作った関数名
     path('gen-pass/', GeneratePasswordView.as_view()),
