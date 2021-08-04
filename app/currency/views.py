@@ -1,8 +1,8 @@
 from currency.forms import RateForm, SourceForm
 from currency.models import ContactUs, GoodCafe, Rate, Source
 from currency.utils import generate_password as gen_pass
-from django.conf import settings
 
+from django.conf import settings
 from django.core.mail import send_mail
 from django.http import HttpResponse
 from django.urls import reverse_lazy
@@ -89,13 +89,13 @@ class ContactUsListView(ListView):
     template_name = 'contact_us.html'
 
 
-def slow_function(*args, **kwargs):
-    print('slow_function Start')
-    print(args)
-    print(kwargs)
-    from time import sleep
-    sleep(10)
-    print('slow_function End')
+# def slow_function(*args, **kwargs):
+#     print('slow_function Start')
+#     print(args)
+#     print(kwargs)
+#     from time import sleep
+#     sleep(10)
+#     print('slow_function End')
 
 
 class ContactUsCreateView(CreateView):
@@ -122,16 +122,16 @@ class ContactUsCreateView(CreateView):
         Body: {message}
         '''
 
-        slow_function(subject, full_email_body)
+        # slow_function(subject, full_email_body)
 
         # Djangoが別サービスsmtpとやり取りする部分
-        # send_mail(
-        #     subject,
-        #     full_email_body,
-        #     settings.EMAIL_HOST_USER,  # от кого
-        #     [settings.SUPPORT_EMAIL],  # получатель
-        #     fail_silently=False,
-        # )
+        send_mail(
+            subject,
+            full_email_body,
+            settings.EMAIL_HOST_USER,  # от кого
+            [settings.SUPPORT_EMAIL],  # получатель
+            fail_silently=False,
+        )
 
         return super().form_valid(form)
 
