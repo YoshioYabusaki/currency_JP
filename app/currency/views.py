@@ -89,6 +89,15 @@ class ContactUsListView(ListView):
     template_name = 'contact_us.html'
 
 
+def slow_function(*args, **kwargs):
+    print('slow_function Start')
+    print(args)
+    print(kwargs)
+    from time import sleep
+    sleep(10)
+    print('slow_function End')
+
+
 class ContactUsCreateView(CreateView):
     model = ContactUs
     success_url = reverse_lazy('index')
@@ -113,13 +122,16 @@ class ContactUsCreateView(CreateView):
         Body: {message}
         '''
 
-        send_mail(
-            subject,
-            full_email_body,
-            settings.EMAIL_HOST_USER,  # от кого
-            [settings.SUPPORT_EMAIL],  # получатель
-            fail_silently=False,
-        )
+        slow_function(subject, full_email_body)
+
+        # Djangoが別サービスsmtpとやり取りする部分
+        # send_mail(
+        #     subject,
+        #     full_email_body,
+        #     settings.EMAIL_HOST_USER,  # от кого
+        #     [settings.SUPPORT_EMAIL],  # получатель
+        #     fail_silently=False,
+        # )
 
         return super().form_valid(form)
 
