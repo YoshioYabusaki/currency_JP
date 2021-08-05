@@ -131,3 +131,5 @@ EMAIL_PORT = 587
 EMAIL_HOST_USER = 'python.test.yoshio@gmail.com'  # от кого
 EMAIL_HOST_PASSWORD = 'pythontest'
 SUPPORT_EMAIL = 'python.test.yoshio@gmail.com'  # получатель この場合サポートセンター
+
+CELERY_BROKER_URL = 'amqp://localhost'  # Broker(Rabbitmq)のアドレス。ここにProducer(Django)とConsumer(Celery)がアクセスする
