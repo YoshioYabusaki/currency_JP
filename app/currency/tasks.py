@@ -1,10 +1,10 @@
-import requests
-
 from bs4 import BeautifulSoup
 
-from celery import shared_task
+import requests
 
 from decimal import Decimal
+
+from celery import shared_task
 
 from django.conf import settings
 from django.core.mail import send_mail
@@ -172,9 +172,9 @@ def parse_otpabank():
 
     usd_buy = round_currency(data.text)
     usd_sale = round_currency(data.next_element.next_element.next_element.text)
-    eur_buy = round_currency(data.next_element.next_element.next_element.next_element.next_element.next_element. \
+    eur_buy = round_currency(data.next_element.next_element.next_element.next_element.next_element.next_element.
                              next_element.next_element.next_element.next_element.next_element.next_element.text)
-    eur_sale = round_currency(data.next_element.next_element.next_element.next_element.next_element.next_element. \
+    eur_sale = round_currency(data.next_element.next_element.next_element.next_element.next_element.next_element.
                               next_element.next_element.next_element.next_element.next_element.next_element.
                               next_element.next_element.next_element.text)
 

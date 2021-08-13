@@ -113,7 +113,6 @@ class ContactUsCreateView(CreateView):
         '''
         contact_us.apply_async(args=(subject, ), kwargs={'body': full_email_body})
 
-
         return super().form_valid(form)
 
 
