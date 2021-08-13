@@ -1,3 +1,5 @@
+from celery.schedules import crontab
+
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -123,8 +125,8 @@ INTERNAL_IPS = [
     '172.31.69.226',
 ]
 
-EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'  # どのようにemailを送るか
-# EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'  # コンソールで表示、実際には送られない
+# EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'  # どのようにemailを送るか
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'  # コンソールで表示、実際には送られない
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_USE_TLS = True
 EMAIL_PORT = 587
@@ -133,3 +135,31 @@ EMAIL_HOST_PASSWORD = 'pythontest'
 SUPPORT_EMAIL = 'python.test.yoshio@gmail.com'  # получатель この場合サポートセンター
 
 CELERY_BROKER_URL = 'amqp://localhost'  # Broker(Rabbitmq)のアドレス。ここにProducer(Django)とConsumer(Celery)がアクセスする
+
+# 定期的なタスク
+CELERY_BEAT_SCHEDULE = {
+    'alfabank': {
+        'task': 'currency.tasks.parse_alfabank',
+        'schedule': crontab(minute='*/15'),
+    },
+    'monobank': {
+        'task': 'currency.tasks.parse_monobank',
+        'schedule': crontab(minute='*/15'),
+    },
+    'oschadbank': {
+        'task': 'currency.tasks.parse_oschadbank',
+        'schedule': crontab(minute='*/15'),
+    },
+    'otpbank': {
+        'task': 'currency.tasks.parse_otpabank',
+        'schedule': crontab(minute='*/15'),
+    },
+    'privatbak': {
+        'task': 'currency.tasks.parse_privatbank',
+        'schedule': crontab(minute='*/15'),
+    },
+    'vkurse_dp_ua': {
+        'task': 'currency.tasks.parse_vkurse_dp_ua',
+        'schedule': crontab(minute='*/15'),
+    },
+}

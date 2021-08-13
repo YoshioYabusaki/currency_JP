@@ -52,8 +52,8 @@ class RateAdmin(ImportExportModelAdmin):
         'id',
         'source',
         'type',
-        'sale',
         'buy',
+        'sale',
         'created',
     )
     list_filter = (
@@ -66,8 +66,8 @@ class RateAdmin(ImportExportModelAdmin):
         'source',
     )
     readonly_fields = (
-        'sale',
         'buy',
+        'sale',
     )
 
     def has_delete_permission(self, request, obj=None):
