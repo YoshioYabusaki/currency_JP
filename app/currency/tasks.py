@@ -84,8 +84,6 @@ def parse_monobank():
     for rate in rates:
         # USD-UAH or EUR-UAH
         if rate['currencyCodeB'] == 980 and (rate['currencyCodeA'] in (840, 978)):
-        # if rate['currencyCodeA'] == 840 and rate['currencyCodeB'] == 980 or \
-        #         rate['currencyCodeA'] == 978 and rate['currencyCodeB'] == 980:
 
             buy = round_currency(rate['rateBuy'])
             sale = round_currency(rate['rateSell'])
