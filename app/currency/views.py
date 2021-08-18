@@ -22,7 +22,7 @@ class GeneratePasswordView(TemplateView):
 
 # CRUD операции для модели Rate
 class RateListView(ListView):  # ListView関数を使うと、以下簡単に書ける
-    queryset = Rate.objects.all()
+    queryset = Rate.objects.all().order_by('-created')
     template_name = 'rate_list.html'  # templatesフォルダにcurrencyフォルダ作り、このhtmlを入れれば本行書く必要なし。しかし。
 
 
@@ -84,7 +84,7 @@ class SourceDeleteView(DeleteView):
 
 # модели ContactUs
 class ContactUsListView(ListView):
-    queryset = ContactUs.objects.all()
+    queryset = ContactUs.objects.all().order_by('-created')
     template_name = 'contact_us.html'
 
 

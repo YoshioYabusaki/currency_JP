@@ -1,5 +1,5 @@
-from currency.models import ContactUs, GoodCafe, Rate, Source
-from currency.resources import ContactUsResource, GoodCafeResource, RateResource, SourceResource
+from currency.models import ContactUs, GoodCafe, Rate, ResponseLog, Source
+from currency.resources import ContactUsResource, GoodCafeResource, RateResource, ResponseLogResource, SourceResource
 
 from django.contrib import admin
 
@@ -111,3 +111,35 @@ class GoodCafeAdmin(ImportExportModelAdmin):
 
 
 admin.site.register(GoodCafe, GoodCafeAdmin)
+
+
+class ResponseLogAdmin(ImportExportModelAdmin):
+    resource_class = ResponseLogResource
+    list_display = (
+        'id',
+        'created',
+        'status_code',
+        'path',
+        'response_time',
+        'request_method',
+    )
+    list_filter = (
+        ('created', DateRangeFilter),
+    )
+    readonly_fields = (  # запретить редактировать
+        'id',
+        'created',
+        'status_code',
+        'path',
+        'response_time',
+        'request_method',
+    )
+
+    def has_add_permission(self, request):  # запретить создать
+        return False
+
+    def has_delete_permission(self, request, obj=None):  # запретить удалть
+        return False
+
+
+admin.site.register(ResponseLog, ResponseLogAdmin)

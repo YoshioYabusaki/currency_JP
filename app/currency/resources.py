@@ -1,4 +1,4 @@
-from currency.models import ContactUs, GoodCafe, Rate, Source
+from currency.models import ContactUs, GoodCafe, Rate, ResponseLog, Source
 
 from import_export import resources
 
@@ -53,4 +53,18 @@ class GoodCafeResource(resources.ModelResource):
             'close_time',
             'address',
             'recommended_menu',
+        )
+
+
+class ResponseLogResource(resources.ModelResource):
+
+    class Meta:
+        model = ResponseLog
+        fields = (
+            'id',
+            'created',
+            'status_code',
+            'path',
+            'response_time',
+            'request_method',
         )

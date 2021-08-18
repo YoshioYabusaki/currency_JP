@@ -31,9 +31,12 @@ INSTALLED_APPS = [
     'import_export',
 
     'currency',  # それぞれのмодульのurls集を独自に作ること。後の混乱を防ぐ。
+    'silk',
 ]
 
 MIDDLEWARE = [
+    'silk.middleware.SilkyMiddleware',
+
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -43,6 +46,9 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 
     'debug_toolbar.middleware.DebugToolbarMiddleware',
+
+    'currency.middlewares.ResponseTimeMiddleware',  # 登録して動かすための一行
+    # 'currency.middlewares.GclidMiddleware',
 ]
 
 ROOT_URLCONF = 'settings.urls'
