@@ -22,7 +22,8 @@ def forwards(apps, schema_editor):
 
 
 def backwards(apps, schema_editor):
-    print('backwards \n' * 10)
+    pass
+    # print('backwards \n' * 10)
 
 
 class Migration(migrations.Migration):
