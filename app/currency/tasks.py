@@ -4,6 +4,8 @@ from bs4 import BeautifulSoup
 
 from celery import shared_task
 
+from currency import model_choices as mch
+
 from django.conf import settings
 from django.core.mail import send_mail
 
@@ -42,18 +44,17 @@ def parse_alfabank():
     eur_buy = round_currency(soup.find("span", {"data-currency": "EUR_BUY"}).text.strip())
     eur_sale = round_currency(soup.find("span", {"data-currency": "EUR_SALE"}).text.strip())
 
-    currency_dict = {'ccy': 'USD', 'buy': usd_buy, 'sale': usd_sale}, \
-                    {'ccy': 'EUR', 'buy': eur_buy, 'sale': eur_sale}
+    currency_dict = {'ccy': mch.TYPE_USD, 'buy': usd_buy, 'sale': usd_sale}, \
+                    {'ccy': mch.TYPE_EUR, 'buy': eur_buy, 'sale': eur_sale}
 
     for rate in currency_dict:
-        currency_type = rate['ccy']
-
+        ct = rate['ccy']
         buy = rate['buy']
         sale = rate['sale']
 
         last_rate = Rate.objects.filter(
             source=source,
-            type=currency_type,
+            type=ct,
         ).order_by('created').last()
 
         if (
@@ -63,7 +64,7 @@ def parse_alfabank():
         ):
             Rate.objects.create(
                 source=source,
-                type=currency_type,
+                type=ct,
                 buy=buy,
                 sale=sale,
             )
@@ -88,15 +89,15 @@ def parse_monobank():
             buy = round_currency(rate['rateBuy'])
             sale = round_currency(rate['rateSell'])
 
-            currency_type = rate['currencyCodeA']
-            if currency_type == 840:
-                currency_type = 'USD'
-            if currency_type == 978:
-                currency_type = 'EUR'
+            ct = rate['currencyCodeA']
+            if ct == 840:
+                ct = mch.TYPE_USD
+            if ct == 978:
+                ct = mch.TYPE_EUR
 
             last_rate = Rate.objects.filter(
                 source=source,
-                type=currency_type,
+                type=ct,
             ).order_by('created').last()
 
             if (
@@ -106,7 +107,7 @@ def parse_monobank():
             ):
                 Rate.objects.create(
                     source=source,
-                    type=currency_type,
+                    type=ct,
                     buy=buy,
                     sale=sale,
                 )
@@ -129,18 +130,17 @@ def parse_oschadbank():
     eur_buy = round_currency(soup.find("strong", {"class": "buy-EUR"}).text.strip())
     eur_sale = round_currency(soup.find("strong", {"class": "sell-EUR"}).text.strip())
 
-    currency_dict = {'ccy': 'USD', 'buy': usd_buy, 'sale': usd_sale}, \
-                    {'ccy': 'EUR', 'buy': eur_buy, 'sale': eur_sale}
+    currency_dict = {'ccy': mch.TYPE_USD, 'buy': usd_buy, 'sale': usd_sale}, \
+                    {'ccy': mch.TYPE_EUR, 'buy': eur_buy, 'sale': eur_sale}
 
     for rate in currency_dict:
-        currency_type = rate['ccy']
-
+        ct = rate['ccy']
         buy = rate['buy']
         sale = rate['sale']
 
         last_rate = Rate.objects.filter(
             source=source,
-            type=currency_type,
+            type=ct,
         ).order_by('created').last()
 
         if (
@@ -150,7 +150,7 @@ def parse_oschadbank():
         ):
             Rate.objects.create(
                 source=source,
-                type=currency_type,
+                type=ct,
                 buy=buy,
                 sale=sale,
             )
@@ -177,18 +177,17 @@ def parse_otpabank():
                               next_element.next_element.next_element.next_element.next_element.next_element.
                               next_element.next_element.next_element.text)
 
-    currency_dict = {'ccy': 'USD', 'buy': usd_buy, 'sale': usd_sale}, \
-                    {'ccy': 'EUR', 'buy': eur_buy, 'sale': eur_sale}
+    currency_dict = {'ccy': mch.TYPE_USD, 'buy': usd_buy, 'sale': usd_sale}, \
+                    {'ccy': mch.TYPE_EUR, 'buy': eur_buy, 'sale': eur_sale}
 
     for rate in currency_dict:
-        currency_type = rate['ccy']
-
+        ct = rate['ccy']
         buy = rate['buy']
         sale = rate['sale']
 
         last_rate = Rate.objects.filter(
             source=source,
-            type=currency_type,
+            type=ct,
         ).order_by('created').last()
 
         if (
@@ -198,7 +197,7 @@ def parse_otpabank():
         ):
             Rate.objects.create(
                 source=source,
-                type=currency_type,
+                type=ct,
                 buy=buy,
                 sale=sale,
             )
@@ -215,18 +214,23 @@ def parse_privatbank():
 
     source = 'privatbank'
     rates = response.json()
-    available_currency_types = ('USD', 'EUR')  # 読みやすくするために
+    # available_currency_types = ('USD', 'EUR')
+    available_currency_types = {
+        'USD': mch.TYPE_USD,
+        'EUR': mch.TYPE_EUR,
+    }  # choiceにより、外部からの情報をシステム内部で使いやすいフォーマットに変換する
 
     for rate in rates:
         currency_type = rate['ccy']
         if currency_type in available_currency_types:
 
-            buy = round_currency(rate['buy'])  # str型からdecimal型に変換。DBがdecimal型だから。
+            buy = round_currency(rate['buy'])  # str型からdecimal型に変換。DBがdecimal型だから
             sale = round_currency(rate['sale'])
+            ct = available_currency_types[currency_type]
 
             last_rate = Rate.objects.filter(
                 source=source,
-                type=currency_type,
+                type=ct,
             ).order_by('created').last()
 
             if (
@@ -236,7 +240,7 @@ def parse_privatbank():
             ):
                 Rate.objects.create(
                     source=source,
-                    type=currency_type,
+                    type=ct,
                     buy=buy,
                     sale=sale,
                 )
@@ -260,18 +264,17 @@ def parse_vkurse_dp_ua():
     eur_buy = rates['Euro']['buy']
     eur_sale = rates['Euro']['sale']
 
-    currency_dict = {'ccy': 'USD', 'buy': usd_buy, 'sale': usd_sale}, \
-                    {'ccy': 'EUR', 'buy': eur_buy, 'sale': eur_sale}
+    currency_dict = {'ccy': mch.TYPE_USD, 'buy': usd_buy, 'sale': usd_sale}, \
+                    {'ccy': mch.TYPE_EUR, 'buy': eur_buy, 'sale': eur_sale}
 
     for rate in currency_dict:
-        currency_type = rate['ccy']
-
+        ct = rate['ccy']
         buy = round_currency(rate['buy'])  # str型からdecimal型に変換。DBがdecimal型だから。
         sale = round_currency(rate['sale'])
 
         last_rate = Rate.objects.filter(
             source=source,
-            type=currency_type,
+            type=ct,
         ).order_by('created').last()
 
         if (
@@ -281,7 +284,7 @@ def parse_vkurse_dp_ua():
         ):
             Rate.objects.create(
                 source=source,
-                type=currency_type,
+                type=ct,
                 buy=buy,
                 sale=sale,
             )
