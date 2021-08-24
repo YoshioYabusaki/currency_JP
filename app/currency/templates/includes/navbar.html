@@ -1,6 +1,20 @@
 <div>
-    <div><a href="/">Home</a></div>
-<!--    <div><a href="#">LogIn</a></div>-->
-<!--    <div><a href="#">SignUp</a></div>-->
-<!--    <div><a href="#">LogOut</a></div>-->
+  <div><a href="/">Home</a></div><br>
+
+  {% if request.user.is_authenticated %}
+    Welcome, {{ request.user.first_name }} {{ request.user.last_name }}!
+    {% if request.user.is_superuser %}
+      You are a SUPERUSER.
+    {% endif %}<br>
+    your email: {{ request.user.email }}<br>
+    <br>
+    <div><a href="{% url 'accounts:my-profile' %}">My profile</a></div>
+    <div><a href="{% url 'logout' %}">Logout</a></div>
+
+  {% else %}
+    Login & fully enjoy our site!
+    <div><a href="{% url 'login' %}">Login</a></div>
+    <div><a href="#">SignUp</a></div>
+  {% endif %}
+
 </div>
