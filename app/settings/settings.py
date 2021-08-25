@@ -2,17 +2,26 @@ from pathlib import Path
 
 from celery.schedules import crontab
 
+from django.urls import reverse_lazy
+
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
+
+
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-7ist2%6a!h%0pio9+cxl-7n_+4+##ojsts(4!g3y**exj9klxv'
+SECRET_KEY = 'django-insecure-7ist2%6a!h%0pio9+cxl-7n_+qwerty4+##ojsts(4!g3y**exj9klxv'
 
 # SECURITY WARNING: don't run with debug turned on in production!
 # TODO move to env
 DEBUG = True
 
 ALLOWED_HOSTS = ['*']
+
+# ログイン・ログアウト後の遷移を規定
+LOGIN_REDIRECT_URL = reverse_lazy('index')
+LOGOUT_REDIRECT_URL = reverse_lazy('index')
 
 
 # Application definition
@@ -31,6 +40,7 @@ INSTALLED_APPS = [
     'import_export',
 
     'currency',  # それぞれのмодульのurls集を独自に作ること。後の混乱を防ぐ。
+    'accounts',
     'silk',
 ]
 
@@ -115,6 +125,7 @@ USE_L10N = True
 
 USE_TZ = True
 
+AUTH_USER_MODEL = 'accounts.User'  # これによりDjangoは、auth_userではなくこのuserで操作できる
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.2/howto/static-files/
@@ -132,7 +143,7 @@ INTERNAL_IPS = [
 ]
 
 # EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'  # どのようにemailを送るか
-EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'  # コンソールで表示、実際には送られない
+# EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'  # shellコンソールで表示、実際には送られない
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_USE_TLS = True
 EMAIL_PORT = 587

@@ -3,6 +3,7 @@ from currency.models import ContactUs, GoodCafe, Rate, Source
 from currency.tasks import contact_us
 from currency.utils import generate_password as gen_pass
 
+from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.http import HttpResponse
 from django.urls import reverse_lazy
 from django.views.generic import (
@@ -20,35 +21,51 @@ class GeneratePasswordView(TemplateView):
         return context
 
 
-# CRUD операции для модели Rate
 class RateListView(ListView):  # ListView関数を使うと、以下簡単に書ける
     queryset = Rate.objects.all().order_by('-created')
     template_name = 'rate_list.html'  # templatesフォルダにcurrencyフォルダ作り、このhtmlを入れれば本行書く必要なし。しかし。
 
+    # ターミナルにCOOKIEを表示させる
+    # def get(self, request, *args, **kwargs):
+    #     print(request.COOKIES)
+    #     return super().get(request, *args, **kwargs)
 
-class RateCreateView(CreateView):
+
+class RateCreateView(UserPassesTestMixin, CreateView):
     queryset = Rate.objects.all()
     form_class = RateForm  # クラスのように書くので()は必要ない
     success_url = reverse_lazy('currency:rate-list')  # 最初は見逃すけど次にリクエストがあったらやるよというlazy, Djangoではよくやる方法
     template_name = 'rate_create.html'
 
+    def test_func(self):
+        user = self.request.user
+        return user.is_superuser
 
-class RateDetailView(DetailView):
+
+class RateDetailView(LoginRequiredMixin, DetailView):
     queryset = Rate.objects.all()
     template_name = 'rate_details.html'
 
 
-class RateUpdateView(UpdateView):
+class RateUpdateView(UserPassesTestMixin, UpdateView):
     queryset = Rate.objects.all()
     form_class = RateForm  # クラスのように書くので()は必要ない
     success_url = reverse_lazy('currency:rate-list')  # 上手くいったら保存の上どこに移るか
     template_name = 'rate_update.html'
 
+    def test_func(self):
+        user = self.request.user
+        return user.is_superuser
 
-class RateDeleteView(DeleteView):
+
+class RateDeleteView(UserPassesTestMixin, DeleteView):
     queryset = Rate.objects.all()
     success_url = reverse_lazy('currency:rate-list')
     template_name = 'rate_delete.html'
+
+    def test_func(self):
+        user = self.request.user
+        return user.is_superuser
 
 
 # CRUD операции для модели Source
