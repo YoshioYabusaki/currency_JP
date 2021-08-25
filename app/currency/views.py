@@ -74,29 +74,41 @@ class SourceListView(ListView):
     template_name = 'source_list.html'
 
 
-class SourceCreateView(CreateView):
+class SourceCreateView(UserPassesTestMixin, CreateView):
     queryset = Source.objects.all()
     form_class = SourceForm
     success_url = reverse_lazy('currency:source-list')
     template_name = 'source_create.html'
 
+    def test_func(self):
+        user = self.request.user
+        return user.is_superuser
 
-class SourceDetailView(DetailView):
+
+class SourceDetailView(LoginRequiredMixin, DetailView):
     queryset = Source.objects.all()
     template_name = 'source_details.html'
 
 
-class SourceUpdateView(UpdateView):
+class SourceUpdateView(UserPassesTestMixin, UpdateView):
     queryset = Source.objects.all()
     form_class = SourceForm
     success_url = reverse_lazy('currency:source-list')
     template_name = 'source_update.html'
 
+    def test_func(self):
+        user = self.request.user
+        return user.is_superuser
 
-class SourceDeleteView(DeleteView):
+
+class SourceDeleteView(UserPassesTestMixin, DeleteView):
     queryset = Source.objects.all()
     success_url = reverse_lazy('currency:source-list')
     template_name = 'source_delete.html'
+
+    def test_func(self):
+        user = self.request.user
+        return user.is_superuser
 
 
 # модели ContactUs
