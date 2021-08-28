@@ -23,6 +23,8 @@ ALLOWED_HOSTS = ['*']
 LOGIN_REDIRECT_URL = reverse_lazy('index')
 LOGOUT_REDIRECT_URL = reverse_lazy('index')
 
+HTTP_SCHEMA = 'http'
+DOMAIN = 'localhost:8000'
 
 # Application definition
 
@@ -142,7 +144,7 @@ INTERNAL_IPS = [
     '172.31.69.226',
 ]
 
-# EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'  # どのようにemailを送るか
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'  # どのようにemailを送るか
 # EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'  # shellコンソールで表示、実際には送られない
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_USE_TLS = True

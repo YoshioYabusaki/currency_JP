@@ -14,6 +14,9 @@ migrate:
 shell:
 	$(manage_py) shell_plus --print-sql
 
+show_urls:
+	$(manage_py) show_urls
+
 createsuperuser:
 	$(manage_py) createsuperuser
 
