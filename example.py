@@ -2,8 +2,6 @@ from decimal import Decimal
 
 from bs4 import BeautifulSoup
 
-from currency import model_choices as mch
-
 import requests
 
 
@@ -11,32 +9,50 @@ def round_currency(num) -> object:
     return Decimal(num).quantize(Decimal('.01'))
 
 
-currency_url = 'https://www.oschadbank.ua/'
+currency_url = 'https://www.ukrgasbank.com/'
 response = requests.get(currency_url)
 
-source = 'Ощадбанк'
+source = 'АБ «УКРГАЗБАНК»'
 soup = BeautifulSoup(response.text, 'html.parser')
 
-rates = soup.find_all("span", {"class": "currency__item_value"})
+rates = soup.find_all("td", {"class": "val"})
 
-for index, element in enumerate(rates):
-    my_dict = {index: round_currency(element.text)}
+usd_buy = round_currency(rates[0].text) / 100
+usd_sale = round_currency(rates[1].text) / 100
+eur_buy = round_currency(rates[3].text) / 100
+eur_sale = round_currency(rates[4].text) / 100
 
-    value_usd_buy = my_dict.get(2)
-    if value_usd_buy is not None:
-        usd_buy = value_usd_buy
+# print(source, usd_buy, usd_sale, eur_buy, eur_sale)
 
-    value_usd_sale = my_dict.get(3)
-    if value_usd_sale is not None:
-        usd_sale = value_usd_sale
 
-        eur_buy = round_currency((soup.find("span", {"class": "currency__item_value"})).text)
-        eur_sale = round_currency((soup.find("span", {"class": "currency__item_value"})).next_sibling.next_sibling.text)
+# currency_url = 'https://www.oschadbank.ua/'
+# response = requests.get(currency_url)
+#
+# source = 'Ощадбанк'
+# soup = BeautifulSoup(response.text, 'html.parser')
+#
+# rates = soup.find_all("span", {"class": "currency__item_value"})
+#
+# for index, element in enumerate(rates):
+#     my_dict = {index: round_currency(element.text)}
+#
+#     value_usd_buy = my_dict.get(2)
+#     if value_usd_buy is not None:
+#         usd_buy = value_usd_buy
+#
+#     value_usd_sale = my_dict.get(3)
+#     if value_usd_sale is not None:
+#         usd_sale = value_usd_sale
+#
+#         eur_buy = round_currency((soup.find("span", {"class": "currency__item_value"})).text)
+#         eur_sale = round_currency(
+#         (soup.find("span", {"class": "currency__item_value"})).next_sibling.next_sibling.text
+#         )
+#
+#         currency_dict = {'ccy': mch.TYPE_USD, 'buy': usd_buy, 'sale': usd_sale}, \
+#                         {'ccy': mch.TYPE_EUR, 'buy': eur_buy, 'sale': eur_sale}
 
-        currency_dict = {'ccy': mch.TYPE_USD, 'buy': usd_buy, 'sale': usd_sale}, \
-                        {'ccy': mch.TYPE_EUR, 'buy': eur_buy, 'sale': eur_sale}
-
-        # print(currency_dict)
+# print(currency_dict)
 
 # rates = soup.find_all("span", {"class": "currency__item_value"})
 # for element in rates:
@@ -86,7 +102,7 @@ for index, element in enumerate(rates):
 
 # for element in data:
 #     my_value = element.text  # str型
-    # my_value = element.text.split(" ")  # list型
+# my_value = element.text.split(" ")  # list型
 
 
 # currency_url = 'https://raiffeisen.ua/ru'

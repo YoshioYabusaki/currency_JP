@@ -9,10 +9,11 @@ from django.views.generic import CreateView, RedirectView, UpdateView
 
 
 class MyProfileView(LoginRequiredMixin, UpdateView):
-    queryset = User.objects.all()
+    # queryset = User.objects.all()
     fields = (
         'first_name',
         'last_name',
+        'avatar',
     )
     success_url = reverse_lazy('index')  # 上手くいったら保存の上どこに移るか
     template_name = 'my_profile.html'

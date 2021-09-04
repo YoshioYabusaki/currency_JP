@@ -1,15 +1,16 @@
 {% extends 'base.html' %}
 
+{% load crispy_forms_tags %}
+
 {% block main_content %}
 
 <caption><font size="6" style="color:green"><b>Sign Up</b></font></caption>
 
 <form method="post">
   <br>
-  <div><a href="{% url 'password_change' %}">Change password</a></div>
   {% csrf_token %}
-  {{ form.as_p }}
-  <button type="submit">Sign Up</button>
+  {{ form|crispy }}
+  <button class="btn btn-primary" type="submit">Sign Up</button>
 </form>
 
 {% endblock %}

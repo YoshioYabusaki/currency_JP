@@ -114,21 +114,21 @@ def parse_monobank():
 
 
 @shared_task
-def parse_oschadbank():
+def parse_ukrgasbank():
     from currency.models import Rate
 
-    currency_url = 'https://www.oschadbank.ua/ua'
+    currency_url = 'https://www.ukrgasbank.com/'
     response = requests.get(currency_url)
 
-    response.raise_for_status()
-
-    source = 'Ощадбанк'
+    source = 'АБ «УКРГАЗБАНК»'
     soup = BeautifulSoup(response.text, 'html.parser')
 
-    usd_buy = round_currency(soup.find("strong", {"class": "buy-USD"}).text.strip())
-    usd_sale = round_currency(soup.find("strong", {"class": "sell-USD"}).text.strip())
-    eur_buy = round_currency(soup.find("strong", {"class": "buy-EUR"}).text.strip())
-    eur_sale = round_currency(soup.find("strong", {"class": "sell-EUR"}).text.strip())
+    rates = soup.find_all("td", {"class": "val"})
+
+    usd_buy = round_currency(rates[0].text) / 100
+    usd_sale = round_currency(rates[1].text) / 100
+    eur_buy = round_currency(rates[3].text) / 100
+    eur_sale = round_currency(rates[4].text) / 100
 
     currency_dict = {'ccy': mch.TYPE_USD, 'buy': usd_buy, 'sale': usd_sale}, \
                     {'ccy': mch.TYPE_EUR, 'buy': eur_buy, 'sale': eur_sale}
@@ -297,3 +297,46 @@ def parse_vkurse_dp_ua():
     # from time import sleep
     # sleep(sleep_time)
     # print(f'Task completed in {sleep_time}')
+
+
+# @shared_task
+# def parse_oschadbank():
+#     from currency.models import Rate
+#
+#     currency_url = 'https://www.oschadbank.ua/ua'
+#     response = requests.get(currency_url)
+#
+#     response.raise_for_status()
+#
+#     source = 'Ощадбанк'
+#     soup = BeautifulSoup(response.text, 'html.parser')
+#
+#     usd_buy = round_currency(soup.find("strong", {"class": "buy-USD"}).text.strip())
+#     usd_sale = round_currency(soup.find("strong", {"class": "sell-USD"}).text.strip())
+#     eur_buy = round_currency(soup.find("strong", {"class": "buy-EUR"}).text.strip())
+#     eur_sale = round_currency(soup.find("strong", {"class": "sell-EUR"}).text.strip())
+#
+#     currency_dict = {'ccy': mch.TYPE_USD, 'buy': usd_buy, 'sale': usd_sale}, \
+#                     {'ccy': mch.TYPE_EUR, 'buy': eur_buy, 'sale': eur_sale}
+#
+#     for rate in currency_dict:
+#         ct = rate['ccy']
+#         buy = rate['buy']
+#         sale = rate['sale']
+#
+#         last_rate = Rate.objects.filter(
+#             source=source,
+#             type=ct,
+#         ).order_by('created').last()
+#
+#         if (
+#                 last_rate is None or
+#                 last_rate.buy != buy or
+#                 last_rate.sale != sale
+#         ):
+#             Rate.objects.create(
+#                 source=source,
+#                 type=ct,
+#                 buy=buy,
+#                 sale=sale,
+#             )

@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     'currency',  # それぞれのмодульのurls集を独自に作ること。後の混乱を防ぐ。
     'accounts',
     'silk',
+    'crispy_forms',
 ]
 
 MIDDLEWARE = [
@@ -80,6 +81,8 @@ TEMPLATES = [
         },
     },
 ]
+
+CRISPY_TEMPLATE_PACK = 'bootstrap4'
 
 WSGI_APPLICATION = 'settings.wsgi.application'
 
@@ -133,6 +136,12 @@ AUTH_USER_MODEL = 'accounts.User'  # これによりDjangoは、auth_userでは�
 # https://docs.djangoproject.com/en/3.2/howto/static-files/
 
 STATIC_URL = '/static/'
+STATICFILES_DIRS = [
+    BASE_DIR / 'static'
+]
+
+MEDIA_URL = '/media/'
+MEDIA_ROOT = BASE_DIR / '..' / 'static_content' / 'media'
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field
@@ -165,8 +174,8 @@ CELERY_BEAT_SCHEDULE = {
         'task': 'currency.tasks.parse_monobank',
         'schedule': crontab(minute='*/15'),
     },
-    'oschadbank': {
-        'task': 'currency.tasks.parse_oschadbank',
+    'ukrgasbank': {
+        'task': 'currency.tasks.parse_ukrgasbank',
         'schedule': crontab(minute='*/15'),
     },
     'otpbank': {

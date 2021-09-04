@@ -1,54 +1,71 @@
 {% extends 'base.html' %}
 
+{% load static %}
+
 {% block main_content %}
-<table width="1200" border="1" style="border-collapse: collapse">
-  <caption><font size="6" style="color:green"><b>Rate list</b></font></caption>
+<caption><font size="6" style="color:green"><b>Rate list</b></font></caption><br>
 
-  {% if request.user.is_superuser %}
-    <a href="{% url 'currency:rate-create' %}">Create Rate</a>
-    <br>
-  {% endif %}
-  <!-- urls.pyのnameからパス（'rate/list/'）を引継いだ -->
-  <!-- Djangoでパスがテンプレートに書かれている場合は、間違いであると覚えておこう。urls.pyでnameを作るのが正解 -->
+{% if request.user.is_superuser %}
+  <a class="btn btn-outline-primary" href="{% url 'currency:rate-create' %}">Create Rate</a>
+{% endif %}
+<br><br>
 
+<table class="table table-striped">
+<!-- urls.pyのnameからパス（'rate/list/'）を引継いだ -->
+<!-- Djangoでパスがテンプレートに書かれている場合は、間違いであると覚えておこう。urls.pyでnameを作るのが正解 -->
+<thead>
+  <tr>
+    <th> ID </th>
+    <th> Source </th>
+    <th> Type </th>
+    <th> Buy </th>
+    <th> Sale </th>
+    <th> Created </th>
+    {% if not request.user.is_authenticated %}
+      <th></th>
+    {% else %}
+      <th> Actions </th>
+    {% endif %}
+  </tr>
+</thead>
 
-  <thead>
-    <tr style="color:green" bgcolor="#fff3b8">
-      <th height="50"> ID </th>
-      <th> Source </th>
-      <th> Type </th>
-      <th> Buy </th>
-      <th> Sale </th>
-      <th> Created </th>
-      {% if request.user.is_authenticated %}
-        <th> Details </th>
+<tbody>
+  {% for rate in rate_list %}  <!-- 左rate_listはviewsで以前作っていた関数名とは無関係（偶然一緒だった） -->
+    <tr>
+      <td>{{ rate.id }}</td>
+      <td>{{ rate.source }}</td>
+      <td>{{ rate.get_type_display }}</td>
+      <td>{{ rate.buy }}</td>
+      <td>{{ rate.sale }}</td>
+      <td>{{ rate.created }}</td>
+
+      <!--Action buttons-->
+      {% if not request.user.is_authenticated %}
+        <th></th>
+      {% else %}
+        <td>
+          <div class="dropdown">
+            <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton"
+                    data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+              Actions
+            </button>
+            <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+              {% if request.user.is_authenticated %}
+                <a class="dropdown-item" href="{% url 'currency:rate-details' rate.pk %}">details</a>
+              {% endif %}
+
+              {% if request.user.is_superuser %}
+                <a class="dropdown-item" href="{% url 'currency:rate-update' rate.pk %}">update</a>
+                <a class="dropdown-item" href="{% url 'currency:rate-delete' rate.pk %}">delete</a>
+              {% endif %}
+            </div>
+          </div>
+        </td>
       {% endif %}
-      {% if request.user.is_superuser %}
-        <th> Update </th>
-        <th> Delete </th>
-      {% endif %}
+
     </tr>
-  </thead>
-
-  <tbody>
-    {% for rate in rate_list %}  <!-- 左rate_listはviewsで以前作っていた関数名とは無関係（偶然一緒だった） -->
-      <tr bgcolor="#FFFFFF">
-        <td width="5%" align="center">{{ rate.id }}</td>
-        <td width="20%" align="center">{{ rate.source }}</td>
-        <td width="10%" align="center">{{ rate.get_type_display }}</td>
-        <td width="10%" align="center">{{ rate.buy }}</td>
-        <td width="10%" align="center">{{ rate.sale }}</td>
-        <td width="24%" align="center">{{ rate.created }}</td>
-        {% if request.user.is_authenticated %}
-          <td width="7%" align="center"><a href="{% url 'currency:rate-details' rate.pk %}">details</a></td>  <!-- パスを引継ぎつつ、pkでIDを指定 -->
-        {% endif %}
-        {% if request.user.is_superuser %}
-          <td width="7%" align="center"><a href="{% url 'currency:rate-update' rate.pk %}">update</a></td>
-          <td width="7%" align="center"><a href="{% url 'currency:rate-delete' rate.pk %}">delete</a></td>
-        {% endif %}
-      </tr>
-    {% endfor %}
-  </tbody>
+  {% endfor %}
+</tbody>
 
 </table>
 {% endblock %}

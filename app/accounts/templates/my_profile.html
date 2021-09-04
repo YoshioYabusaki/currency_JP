@@ -1,15 +1,25 @@
 {% extends 'base.html' %}
 
+{% load crispy_forms_tags %}
+
+{% load static %}
+
 {% block main_content %}
 
-<caption><font size="6" style="color:green"><b>My profile</b></font></caption>
+<caption><font size="6" style="color:green"><b>My profile</b></font></caption><br>
 
-<form method="post">
+{% if request.user.avatar %}
+<img src="{{ request.user.avatar.url }}" class="rounded-circle h200">
+{% else %}
+<img src="{% static 'images/anon.png' %}" class="rounded-circle h200">
+{% endif %}
+
+<form method="post" enctype="multipart/form-data">
   <br>
-  <div><a href="{% url 'password_change' %}">Change password</a></div>
+  <div><a  class="btn btn-outline-primary" href="{% url 'password_change' %}">Change password</a></div><br>
   {% csrf_token %}
-  {{ form.as_p }}
-  <button type="submit">Submit</button>
+  {{ form|crispy }}
+  <button class="btn btn-primary" type="submit">Submit</button>
 </form>
 
 {% endblock %}

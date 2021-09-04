@@ -1,13 +1,15 @@
 {% extends 'base.html' %}
 
+{% load crispy_forms_tags %}
+
 {% block main_content %}
 
 <caption><font size="6" style="color:green"><b>Update Rate</b></font></caption>
 
 <form method="post">
   {% csrf_token %}
-  {{ form.as_p }}
-  <button type="submit">Send to Django Server</button>
+  {{ form|crispy }}
+  <button type="submit" class="btn btn-primary">Send to Django Server</button>
 </form>
 
 {% endblock %}

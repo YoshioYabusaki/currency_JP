@@ -1,10 +1,25 @@
 {% extends 'base.html' %}
 
+{% load static %}
+
 {% block main_content %}
 
 <caption><font size="6" style="color:green"><b>Source Details</b></font></caption>
 <br>
-
+{% if source.name == 'privatbank' %}
+<img src="{% static 'images/PrivatBank.png' %}" class="h100">
+{% elif source.name == 'alfabank' %}
+<img src="{% static 'images/alfabank.png' %}" class="h100">
+{% elif source.name == 'otpbank' %}
+<img src="{% static 'images/otp-logo.png' %}" class="h100">
+{% elif source.name == 'АБ «УКРГАЗБАНК»' %}
+<img src="{% static 'images/ukrgasbank.jpg' %}" class="h100">
+{% elif source.name == 'monobank' %}
+<img src="{% static 'images/monobank.png' %}" class="h100">
+{% elif source.name == 'vkurse.dp.ua' %}
+<img src="{% static 'images/vkurse.png' %}" class="h100">
+{% endif %}
+<br>
 ID: {{ object.id }}<br>
 Bank name: {{ object.name }}<br>
 Bank URL: {{ object.source_url }}<br>
