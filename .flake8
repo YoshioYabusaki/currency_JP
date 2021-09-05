@@ -1,3 +1,7 @@
 [flake8]
 max-line-length=120
 #exclude=migrations
+exclude =
+    app/static/scripts/bootstrap.bundle.min.js,
+    app/static/scripts/jquery-3.5.1.slim.min.js,
+    app/static/styles/bootstrap.min.css
