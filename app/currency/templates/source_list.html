@@ -31,18 +31,10 @@
       <tr>
         <td>{{ source.id }}</td>
         <td>
-          {% if source.name == 'privatbank' %}
-            <img src="{% static 'images/PrivatBank.png' %}" class="h100">
-          {% elif source.name == 'alfabank' %}
-            <img src="{% static 'images/alfabank.png' %}" class="h100">
-          {% elif source.name == 'otpbank' %}
-            <img src="{% static 'images/otp-logo.png' %}" class="h100">
-          {% elif source.name == 'АБ «УКРГАЗБАНК»' %}
-            <img src="{% static 'images/ukrgasbank.jpg' %}" class="h100">
-          {% elif source.name == 'monobank' %}
-            <img src="{% static 'images/monobank.png' %}" class="h100">
-          {% elif source.name == 'vkurse.dp.ua' %}
-            <img src="{% static 'images/vkurse.png' %}" class="h100">
+          {% if source.logo %}
+            <img src="{{ source.logo.url }}" class="h100">
+          {% else %}
+            <img src="{% static 'images/no-image.png' %}" class="h100">
           {% endif %}
         </td>
         <td>{{ source.name }}</td>

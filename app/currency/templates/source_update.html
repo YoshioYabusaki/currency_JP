@@ -2,11 +2,19 @@
 
 {% load crispy_forms_tags %}
 
+{% load static %}
+
 {% block main_content %}
 
-<caption><font size="6" style="color:green"><b>Update Source</b></font></caption>
+<caption><font size="6" style="color:green"><b>Update Source</b></font></caption><br>
 
-<form method="post">
+{% if source.logo %}
+<img src="{{ source.logo.url }}" class="h100">
+{% else %}
+<img src="{% static 'images/no-image.png' %}" class="h100">
+{% endif %}
+
+<form method="post" enctype="multipart/form-data">  <!--enctypeはimageをサーバーに送る-->
   {% csrf_token %}
   {{ form|crispy }}
   <button type="submit" class="btn btn-primary">Send to Django Server</button>

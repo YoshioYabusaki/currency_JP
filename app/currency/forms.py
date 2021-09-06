@@ -20,4 +20,5 @@ class SourceForm(forms.ModelForm):  # 名前は慣例的にこう書く。文字
         fields = (
             'name',
             'source_url',
+            'logo',
         )
