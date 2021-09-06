@@ -1,20 +1,60 @@
-<div>
-  <div><a href="/">Home</a></div><br>
+<!--<div>-->
+<!--  <div><a href="/">Home</a></div><br>-->
 
-  {% if request.user.is_authenticated %}
-    Welcome, {{ request.user.first_name }} {{ request.user.last_name }}!
-    {% if request.user.is_superuser %}
-      You are a SUPERUSER.
-    {% endif %}<br>
-    your email: {{ request.user.email }}<br>
-    <br>
-    <div><a href="{% url 'accounts:my-profile' %}">My profile</a></div>
-    <div><a href="{% url 'logout' %}">Logout</a></div>
+<!--  {% if request.user.is_authenticated %}-->
+<!--    Welcome {{ request.user.first_name }} {{ request.user.last_name }}!-->
+<!--    {% if request.user.is_superuser %}-->
+<!--      You are a SUPERUSER.-->
+<!--    {% endif %}<br>-->
+<!--    your email: {{ request.user.email }}<br>-->
+<!--    <br>-->
+<!--    <div><a href="{% url 'accounts:my-profile' %}">My profile</a></div>-->
+<!--    <div><a href="{% url 'logout' %}">Logout</a></div>-->
 
-  {% else %}
-    Login & fully enjoy our site!
-    <div><a href="{% url 'login' %}">Login</a></div>
-    <div><a href="#">SignUp</a></div>
-  {% endif %}
+<!--  {% else %}-->
+<!--    Login & fully enjoy our site!-->
+<!--    <div><a href="{% url 'login' %}">Login</a></div>-->
+<!--    <div><a href="{% url 'accounts:sign-up' %}">SignUp</a></div>-->
+<!--  {% endif %}-->
 
-</div>
+<!--</div>-->
+{% load static %}
+
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+  <a class="navbar-brand" href="{% url 'index' %}">Home</a>
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarText"
+          aria-controls="navbarText" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+  <div class="collapse navbar-collapse" id="navbarText">
+    <ul class="navbar-nav mr-auto">
+
+      <li class="nav-item">
+        <a class="nav-link" href="{% url 'currency:rate-list' %}">rate list</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="{% url 'currency:source-list' %}">source list</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="{% url 'currency:contact-us-create' %}">contact us</a>
+      </li>
+
+    </ul>
+    <span class="navbar-text">
+      {% if request.user.is_authenticated %}
+        {{ request.user.first_name }} {{ request.user.last_name }}
+        [{{ request.user.email }}]
+        {% if request.user.avatar %}
+          <img src="{{ request.user.avatar.url }}" class="rounded-circle h40">
+        {% else %}
+          <img src="{% static 'images/anon.png' %}" class="rounded-circle h40">
+        {% endif %}
+        <a class="btn btn-link" href="{% url 'accounts:my-profile' %}">My profile</a>
+        <a class="btn btn-link" href="{% url 'logout' %}">Logout</a>
+      {% else %}
+        <a class="btn btn-link" href="{% url 'accounts:sign-up' %}">SignUp</a>
+        <a class="btn btn-link" href="{% url 'login' %}">Login</a>
+      {% endif %}
+    </span>
+  </div>
+</nav>

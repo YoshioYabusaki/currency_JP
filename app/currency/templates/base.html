@@ -1,22 +1,39 @@
+{% load static %}
+
 <!DOCTYPE html>
 {# TEMPLATE #}
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <title>～ Python Lesson ～</title>
+
+    <!-- bootstrapのリンクはヘッドに。-->
+    <link rel="stylesheet" href="{% static 'styles/bootstrap.min.css' %}">
+    <link rel="stylesheet" href="{% static 'styles/main.css' %}">
+    <link rel="stylesheet" href="{% static 'styles/main_nav.css' %}">
+    <link rel="stylesheet" href="{% static 'styles/main_source.css' %}">
 </head>
-<body bgcolor="#faf0e6">
+
+<body>
 <center>
 
     <font size="8" style="color:green" face="Comic Sans MS">～ Python Lesson ～</font>
 
     <p>{% include 'includes/navbar.html' %}</p>  <!-- ナビゲーションバーを追加 -->
 
-    {% block main_content %}  <!-- ここに内容を差し込む -->
-    {% endblock %}
+    <p>{% include 'includes/messages.html' %}</p>
+
+    <div class="container">
+        {% block main_content %}  <!-- ここに内容を差し込む -->
+        {% endblock %}
+    </div>
 
     <p>{% include 'includes/footer.html' %}</p>  <!-- フッターを追加 -->
 
+<!--bootstrapのスクリプトは最後に。-->
+<script src="{% static 'scripts/jquery-3.5.1.slim.min.js' %}"></script>
+<script src="{% static 'scripts/bootstrap.bundle.min.js' %}"></script>
 </center>
 </body>
 </html>

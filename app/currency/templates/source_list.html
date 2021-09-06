@@ -1,42 +1,68 @@
 {% extends 'base.html' %}
 
-{% block main_content %}
-<table width="1200" border="1" style="border-collapse: collapse">
-  <caption><font size="6" style="color:green"><b>Source list</b></font></caption>
+{% load static %}
 
-  {% if request.user.is_superuser %}
-    <a href="{% url 'currency:source-create' %}">Create Source</a>
-    <br>
-  {% endif %}
+{% block main_content %}
+<caption><font size="6" style="color:green"><b>Source list</b></font></caption><br>
+
+{% if request.user.is_superuser %}
+  <a class="btn btn-outline-primary" href="{% url 'currency:source-create' %}">Create Source</a>
+{% endif %}
+<br><br>
+
+<table class="table table-striped">
 
   <thead>
-    <tr style="color:green" bgcolor="#fff3b8">
-      <th height="50"> ID </th>
+    <tr>
+      <th> ID </th>
+      <th> Bank logo </th>
       <th> Bank name </th>
       <th> Bank URL </th>
-      {% if request.user.is_authenticated %}
-        <th> Details </th>
-      {% endif %}
-      {% if request.user.is_superuser %}
-        <th> Update </th>
-        <th> Delete </th>
+      {% if not request.user.is_authenticated %}
+        <th></th>
+      {% elif request.user.is_authenticated %}
+        <th> Actions </th>
       {% endif %}
     </tr>
   </thead>
 
   <tbody>
-    {% for source in source_list %}  <!-- 左source_listはviewsで以前作っていた関数名source_listとは無関係（偶然一緒だった） -->
-      <tr bgcolor="#FFFFFF">
-        <td width="5%" align="center">{{ source.id }}</td>
-        <td width="24%" align="center">{{ source.name }}</td>
-        <td width="53%" align="center">{{ source.source_url }}</td>
-        {% if request.user.is_authenticated %}
-          <td width="6%" align="center"><a href="{% url 'currency:source-details' source.pk %}">details</a></td>    <!-- pkはID-->
+    {% for source in source_list %}  <!-- source_listはviewsで以前作っていた関数名source_listとは無関係（偶然一緒だった） -->
+      <tr>
+        <td>{{ source.id }}</td>
+        <td>
+          {% if source.logo %}
+            <img src="{{ source.logo.url }}" class="h100">
+          {% else %}
+            <img src="{% static 'images/no-image.png' %}" class="h100">
+          {% endif %}
+        </td>
+        <td>{{ source.name }}</td>
+        <td>{{ source.source_url }}</td>
+
+
+        <!--Action buttons-->
+        {% if not request.user.is_authenticated %}
+          <td></td>
+        {% elif request.user.is_authenticated %}
+          <td>
+            <div class="dropdown">
+              <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton"
+                      data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                Actions
+              </button>
+              <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                <a class="dropdown-item" href="{% url 'currency:source-details' source.pk %}">details</a>
+
+                {% if request.user.is_superuser %}
+                  <a class="dropdown-item" href="{% url 'currency:source-update' source.pk %}">update</a>
+                  <a class="dropdown-item" href="{% url 'currency:source-delete' source.pk %}">delete</a>
+                {% endif %}
+              </div>
+            </div>
+          </td>
         {% endif %}
-        {% if request.user.is_superuser %}
-          <td width="6%" align="center"><a href="{% url 'currency:source-update' source.pk %}">update</a></td>
-          <td width="6%" align="center"><a href="{% url 'currency:source-delete' source.pk %}">delete</a></td>
-        {% endif %}
+
       </tr>
     {% endfor %}
   </tbody>

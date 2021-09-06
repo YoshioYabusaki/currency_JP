@@ -3,11 +3,11 @@
 {% block main_content %}
 
 <font size="5" style="color:red">Are you sure you want to delete the rate with ID: {{ object.id }} ?</font>
+<br><br>
 
 <form method="post">
   {% csrf_token %}
-  {{ form.as_p }}
-  <button type="submit" style="color:red">Click here to Delete</button>
+  <button type="submit" class="btn btn-danger">Click here to Delete</button>
 </form>
 
 {% endblock %}
