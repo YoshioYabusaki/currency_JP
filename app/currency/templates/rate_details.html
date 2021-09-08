@@ -1,12 +1,21 @@
 {% extends 'base.html' %}
 
+{% load static %}
+
 {% block main_content %}
 
 <caption><font size="6" style="color:green"><b>Rate Details</b></font></caption>
 <br>
 
+{% if rate.source.logo %}
+<img src="{{ rate.source.logo.url }}" class="h100">
+{% else %}
+<img src="{% static 'images/no-image.png' %}" class="h100">
+{% endif %}
+<br>
+
 ID: {{ object.id }}<br>
-Source: {{ object.source }}<br>
+Source: {{ rate.source.name }}<br>
 Type: {{ object.get_type_display }}<br>
 Buy: {{ object.buy }}<br>
 Sale: {{ object.sale }}<br>

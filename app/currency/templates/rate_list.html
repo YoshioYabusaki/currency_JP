@@ -33,7 +33,11 @@
   {% for rate in rate_list %}  <!-- 左rate_listはviewsで以前作っていた関数名とは無関係（偶然一緒だった） -->
     <tr>
       <td>{{ rate.id }}</td>
-      <td>{{ rate.source }}</td>
+      {% if not request.user.is_authenticated %}
+        <td>{{ rate.source.name }}</td>
+      {% elif request.user.is_authenticated %}
+        <td><a href="{% url 'currency:source-details' rate.source_id %}">{{ rate.source.name }}</a></td>
+      {% endif %}
       <td>{{ rate.get_type_display }}</td>
       <td>{{ rate.buy }}</td>
       <td>{{ rate.sale }}</td>

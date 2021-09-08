@@ -22,7 +22,8 @@ class GeneratePasswordView(TemplateView):
 
 
 class RateListView(ListView):  # ListView関数を使うと、以下簡単に書ける
-    queryset = Rate.objects.all().order_by('-created')
+    queryset = Rate.objects.all().select_related('source').order_by('-created')
+    # .select_related('source')はRateとSourceをJOINする
     template_name = 'rate_list.html'  # templatesフォルダにcurrencyフォルダ作り、このhtmlを入れれば本行書く必要なし。しかし。
 
     # ターミナルにCOOKIEを表示させる
