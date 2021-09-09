@@ -4,6 +4,7 @@ from bs4 import BeautifulSoup
 
 from celery import shared_task
 
+from currency import consts
 from currency import model_choices as mch
 
 from django.conf import settings
@@ -29,14 +30,17 @@ def contact_us(subject, body):
 
 @shared_task
 def parse_alfabank():
-    from currency.models import Rate  # タスク内でmodelsを使う場合はタスク内でインポートする
+    from currency.models import Rate, Source  # タスク内でmodelsを使う場合はタスク内でインポートする
 
     alfa_currency_url = 'https://alfabank.ua/ru'
     response = requests.get(alfa_currency_url)
 
     response.raise_for_status()  # raise error if status_code is not 2xx
 
-    source = 'alfabank'
+    source = Source.objects.get_or_create(
+        code_name=consts.CODE_NAME_ALFABANK,
+        defaults={'name': 'alfabank'},
+    )[0]
     soup = BeautifulSoup(response.text, 'html.parser')
 
     usd_buy = round_currency(soup.find("span", {"data-currency": "USD_BUY"}).text.strip())
@@ -72,14 +76,17 @@ def parse_alfabank():
 
 @shared_task
 def parse_monobank():
-    from currency.models import Rate
+    from currency.models import Rate, Source
 
     monobank_currency_url = 'https://api.monobank.ua/bank/currency'
     response = requests.get(monobank_currency_url)
 
     response.raise_for_status()  # 結果が200番台ではないときにエラーを出す
 
-    source = 'monobank'
+    source = Source.objects.get_or_create(
+        code_name=consts.CODE_NAME_MONOBANK,
+        defaults={'name': 'monobank'},
+    )[0]
     rates = response.json()
 
     for rate in rates:
@@ -115,12 +122,15 @@ def parse_monobank():
 
 @shared_task
 def parse_ukrgasbank():
-    from currency.models import Rate
+    from currency.models import Rate, Source
 
     currency_url = 'https://www.ukrgasbank.com/'
     response = requests.get(currency_url)
 
-    source = 'АБ «УКРГАЗБАНК»'
+    source = Source.objects.get_or_create(
+        code_name=consts.CODE_NAME_UKRGASBANK,
+        defaults={'name': 'ukrgasbank'},
+    )[0]
     soup = BeautifulSoup(response.text, 'html.parser')
 
     rates = soup.find_all("td", {"class": "val"})
@@ -157,15 +167,18 @@ def parse_ukrgasbank():
 
 
 @shared_task
-def parse_otpabank():
-    from currency.models import Rate  # タスク内でmodelsを使う場合はタスク内でインポートする
+def parse_otpbank():
+    from currency.models import Rate, Source  # タスク内でmodelsを使う場合はタスク内でインポートする
 
     currency_url = 'https://ru.otpbank.com.ua/'
     response = requests.get(currency_url)
 
     response.raise_for_status()
 
-    source = 'otpbank'
+    source = Source.objects.get_or_create(
+        code_name=consts.CODE_NAME_OTPBANK,
+        defaults={'name': 'otpbank'},
+    )[0]
     soup = BeautifulSoup(response.text, 'html.parser')
     data = soup.find("td", {"class": "currency-list__value"})
 
@@ -205,14 +218,18 @@ def parse_otpabank():
 
 @shared_task
 def parse_privatbank():
-    from currency.models import Rate  # タスク内でmodelsを使う場合はタスク内でインポートする
+    from currency.models import Rate, Source  # タスク内でmodelsを使う場合はタスク内でインポートする
 
     privatbank_currency_url = 'https://api.privatbank.ua/p24api/pubinfo?json&exchange&coursid=5'
     response = requests.get(privatbank_currency_url)
 
     response.raise_for_status()  # raise error if status_code is not 2xx
 
-    source = 'privatbank'
+    # source = 'privatbank'
+    source = Source.objects.get_or_create(
+        code_name=consts.CODE_NAME_PRIVATBANK,
+        defaults={'name': 'PrivatBank'},
+    )[0]
     rates = response.json()
     # available_currency_types = ('USD', 'EUR')
     available_currency_types = {
@@ -248,14 +265,17 @@ def parse_privatbank():
 
 @shared_task
 def parse_vkurse_dp_ua():
-    from currency.models import Rate
+    from currency.models import Rate, Source
 
     currency_url = 'http://vkurse.dp.ua/course.json'
     response = requests.get(currency_url)
 
     response.raise_for_status()  # 結果が200番台ではないときにエラーを出す
 
-    source = 'vkurse.dp.ua'
+    source = Source.objects.get_or_create(
+        code_name=consts.CODE_NAME_VKURSE_DP_UA,
+        defaults={'name': 'vkurse.dp.ua'},
+    )[0]
     rates = response.json()
     del rates['Rub']
 

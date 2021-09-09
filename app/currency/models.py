@@ -8,14 +8,6 @@ def upload_logo(instance, filename):
     return f'logos/{instance.id}/{filename}'
 
 
-class Rate(models.Model):
-    sale = models.DecimalField(max_digits=5, decimal_places=2)  # 123.45
-    buy = models.DecimalField(max_digits=5, decimal_places=2)  # 123.45
-    created = models.DateTimeField(auto_now_add=True)
-    source = models.CharField(max_length=32)  # examples: privatbank, monobank
-    type = models.CharField(max_length=3, choices=mch.RATE_TYPES)  # noqa
-
-
 class Source(models.Model):
     name = models.CharField(max_length=64)
     source_url = models.CharField(max_length=255)
@@ -24,6 +16,26 @@ class Source(models.Model):
         blank=True,
         null=True,
         default=None,
+    )
+    code_name = models.CharField(max_length=24, unique=True, editable=False)
+
+
+class Rate(models.Model):
+    sale = models.DecimalField(max_digits=5, decimal_places=2)  # 123.45
+    buy = models.DecimalField(max_digits=5, decimal_places=2)  # 123.45
+    created = models.DateTimeField(auto_now_add=True)
+    # source = models.CharField(max_length=32)
+    source = models.ForeignKey(
+        Source,
+        related_name='rates',
+        on_delete=models.CASCADE,
+    )
+    type = models.CharField(  # noqa
+        max_length=3,
+        choices=mch.RATE_TYPES,
+        blank=False,
+        null=False,
+        default=mch.TYPE_USD,
     )
 
 
