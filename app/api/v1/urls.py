@@ -1,5 +1,5 @@
 from api.v1 import views
-from api.v1.views import SourceView
+from api.v1.views import SourceView, SourceWithRateView
 
 from django.urls import path
 
@@ -20,6 +20,7 @@ router.register(r'contactus', views.ContactUsViewSet, basename='contactus')
 urlpatterns = [
     # path('contactus/', ContactUsView.as_view()),
     path('source/', SourceView.as_view(), name='source'),
+    path('source_with_rate/', SourceWithRateView.as_view(), name='source_with_rate'),
     path('choices/', views.RateChoicesView.as_view(), name='currency_choices'),
     path('token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
     path('token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),

@@ -57,29 +57,13 @@ class RateSerializer(serializers.ModelSerializer):
         }
 
 
-# class RateObjSerializer(serializers.ModelSerializer):
-#
-#     class Meta:
-#         model = Rate
-#         fields = (
-#             'id',
-#             'type',
-#             'buy',
-#             'sale',
-#             'created',
-#         )
-#
-#
-# class SourceSerializer(serializers.ModelSerializer):
-#     queryset = Rate.objects.all()
-#     serializer = RateObjSerializer(queryset, many=True, read_only=True)
-#     serializer.data
-#
-#     class Meta:
-#         model = Source
-#         fields = (
-#             'id',
-#             'name',
-#             'rate_obj',
-#             'source_url',
-#         )
+class SourceWithRateSerializer(serializers.ModelSerializer):
+    rate_set = RateSerializer(many=True, source='rates', read_only=True)
+
+    class Meta:
+        model = Source
+        fields = (
+            'id',
+            'name',
+            'rate_set',
+        )

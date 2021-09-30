@@ -1,6 +1,6 @@
 from api.v1.filters import ContactUsFilter, RateFilter
 from api.v1.paginators import ContactUsPagination, RatePagination
-from api.v1.serializers import ContactUsSerializer, RateSerializer, SourceSerializer
+from api.v1.serializers import ContactUsSerializer, RateSerializer, SourceSerializer, SourceWithRateSerializer
 from api.v1.throttles import AnonUserRateThrottle
 
 from currency import model_choices as mch
@@ -64,15 +64,10 @@ class RateChoicesView(generics.GenericAPIView):
 
 
 class SourceView(generics.ListAPIView):
-    queryset = Source.objects.all()  # .select_related('rate')
+    queryset = Source.objects.all()
     serializer_class = SourceSerializer
 
 
-# class RatesView(generics.ListCreateAPIView):
-#     queryset = Rate.objects.all()
-#     serializer_class = RateSerializer
-#
-#
-# class RateDetailsView(generics.RetrieveUpdateDestroyAPIView):
-#     queryset = Rate.objects.all()
-#     serializer_class = RateSerializer
+class SourceWithRateView(generics.ListAPIView):
+    queryset = Source.objects.all()
+    serializer_class = SourceWithRateSerializer
