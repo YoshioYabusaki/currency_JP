@@ -1,3 +1,4 @@
+from datetime import timedelta
 from pathlib import Path
 
 from celery.schedules import crontab
@@ -40,6 +41,10 @@ INSTALLED_APPS = [
     'debug_toolbar',
     'rangefilter',
     'import_export',
+    'rest_framework',
+    'drf_yasg',
+    'django_filters',
+    'rest_framework_simplejwt',
 
     'currency',  # それぞれのмодульのurls集を独自に作ること。後の混乱を防ぐ。
     'accounts',
@@ -159,7 +164,7 @@ EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_USE_TLS = True
 EMAIL_PORT = 587
 EMAIL_HOST_USER = 'python.test.yoshio@gmail.com'  # от кого
-EMAIL_HOST_PASSWORD = 'pythontest'
+EMAIL_HOST_PASSWORD = 'pythontest001'
 SUPPORT_EMAIL = 'python.test.yoshio@gmail.com'  # получатель この場合サポートセンター
 
 CELERY_BROKER_URL = 'amqp://localhost'  # Broker(Rabbitmq)のアドレス。ここにProducer(Django)とConsumer(Celery)がアクセスする
@@ -190,4 +195,42 @@ CELERY_BEAT_SCHEDULE = {
         'task': 'currency.tasks.parse_vkurse_dp_ua',
         'schedule': crontab(minute='*/15'),
     },
+}
+
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
+    ),  # 401 ユーザーのステータスの見分け方
+    'DEFAULT_PERMISSION_CLASSES': (
+        # 'rest_framework.permissions.IsAuthenticated',
+    ),  # 403 アクセス権限を見分ける。全体にアクセス制限する。もしくはviewsでviewごとに制限かけることもできる。
+    'DEFAULT_THROTTLE_RATES': {
+        'rates_anon_throttle': '20/min',
+    },
+}
+
+SIMPLE_JWT = {
+    'ACCESS_TOKEN_LIFETIME': timedelta(days=14),
+    'REFRESH_TOKEN_LIFETIME': timedelta(days=1),
+    'ROTATE_REFRESH_TOKENS': False,
+    'BLACKLIST_AFTER_ROTATION': True,
+
+    'ALGORITHM': 'HS256',
+    'SIGNING_KEY': SECRET_KEY,
+    'VERIFYING_KEY': None,
+    'AUDIENCE': None,
+    'ISSUER': None,
+
+    'AUTH_HEADER_TYPES': ('Bearer', 'JWT',),
+    'USER_ID_FIELD': 'id',
+    'USER_ID_CLAIM': 'user_id',
+
+    'AUTH_TOKEN_CLASSES': ('rest_framework_simplejwt.tokens.AccessToken',),
+    'TOKEN_TYPE_CLAIM': 'token_type',
+
+    'JTI_CLAIM': 'jti',
+
+    'SLIDING_TOKEN_REFRESH_EXP_CLAIM': 'refresh_exp',
+    'SLIDING_TOKEN_LIFETIME': timedelta(minutes=5),
+    'SLIDING_TOKEN_REFRESH_LIFETIME': timedelta(days=1),
 }

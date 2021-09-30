@@ -28,7 +28,7 @@ class Rate(models.Model):
     source = models.ForeignKey(
         Source,
         related_name='rates',
-        on_delete=models.CASCADE,
+        on_delete=models.CASCADE,  # もしSourceでデータ消去の場合、関連のRateも消去。.SET_NULLも便利。
     )
     type = models.CharField(  # noqa
         max_length=3,

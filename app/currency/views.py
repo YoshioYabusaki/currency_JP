@@ -151,6 +151,20 @@ class GoodCafeListView(ListView):
     template_name = 'good_cafe.html'
 
 
+# def rates_list_api_example(request):
+#     import json
+#     rates = Rate.objects.all()
+#     result = []
+#     for rate in rates:
+#         result.append({
+#             'id': rate.id,
+#             'buy': float(rate.buy),
+#             'sale': float(rate.sale),
+#         })
+#     # return HttpResponse(json.dumps(result), content_type='application/json')
+#     return JsonResponse(result, safe=False)
+
+
 def response_codes(request):
     response = HttpResponse('Status code', status=301, headers={'Location': '/rate/list/'})
     return response
