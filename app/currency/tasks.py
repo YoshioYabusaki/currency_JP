@@ -10,6 +10,8 @@ from currency import model_choices as mch
 from django.conf import settings
 from django.core.mail import send_mail
 
+import re
+
 import requests
 
 
@@ -32,7 +34,7 @@ def contact_us(subject, body):
 def parse_alfabank():
     from currency.models import Rate, Source  # タスク内でmodelsを使う場合はタスク内でインポートする
 
-    alfa_currency_url = 'https://alfabank.ua/ru'
+    alfa_currency_url = 'https://alfabank.ua/ru/currency-exchange'
     response = requests.get(alfa_currency_url)
 
     response.raise_for_status()  # raise error if status_code is not 2xx
@@ -43,18 +45,20 @@ def parse_alfabank():
     )[0]
     soup = BeautifulSoup(response.text, 'html.parser')
 
-    usd_buy = round_currency(soup.find("span", {"data-currency": "USD_BUY"}).text.strip())
-    usd_sale = round_currency(soup.find("span", {"data-currency": "USD_SALE"}).text.strip())
-    eur_buy = round_currency(soup.find("span", {"data-currency": "EUR_BUY"}).text.strip())
-    eur_sale = round_currency(soup.find("span", {"data-currency": "EUR_SALE"}).text.strip())
+    rates = soup.find_all("h4", {"class": "exchange-rate-tabs__info-value"})
+
+    usd_buy = rates[0].text.strip()
+    usd_sale = rates[1].text.strip()
+    eur_buy = rates[2].text.strip()
+    eur_sale = rates[3].text.strip()
 
     currency_dict = {'ccy': mch.TYPE_USD, 'buy': usd_buy, 'sale': usd_sale}, \
                     {'ccy': mch.TYPE_EUR, 'buy': eur_buy, 'sale': eur_sale}
 
     for rate in currency_dict:
         ct = rate['ccy']
-        buy = rate['buy']
-        sale = rate['sale']
+        buy = round_currency(rate['buy'])  # str型からdecimal型に変換。DBがdecimal型だから。
+        sale = round_currency(rate['sale'])
 
         last_rate = Rate.objects.filter(
             source=source,
@@ -277,12 +281,12 @@ def parse_vkurse_dp_ua():
         defaults={'name': 'vkurse.dp.ua'},
     )[0]
     rates = response.json()
-    del rates['Rub']
+    # del rates["Rub"]
 
     usd_buy = rates['Dollar']['buy']
     usd_sale = rates['Dollar']['sale']
     eur_buy = rates['Euro']['buy']
-    eur_sale = rates['Euro']['sale']
+    eur_sale = re.sub(r"[^\d.]", "", rates['Euro']['sale'])  # emojiを削除
 
     currency_dict = {'ccy': mch.TYPE_USD, 'buy': usd_buy, 'sale': usd_sale}, \
                     {'ccy': mch.TYPE_EUR, 'buy': eur_buy, 'sale': eur_sale}

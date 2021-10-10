@@ -200,13 +200,14 @@ CELERY_BEAT_SCHEDULE = {
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework_simplejwt.authentication.JWTAuthentication',
-    ),  # 401 ユーザーのステータスの見分け方
+    ),  # 401（←誰か分かりませんでした） どのようにユーザーのステータスの見分けるか
     'DEFAULT_PERMISSION_CLASSES': (
         # 'rest_framework.permissions.IsAuthenticated',
-    ),  # 403 アクセス権限を見分ける。全体にアクセス制限する。もしくはviewsでviewごとに制限かけることもできる。
+    ),  # 403（←誰か分かるけど権限なかったよ） ユーザーのアクセス権限を見分ける。全体にアクセス制限する。もしくはviewsでviewごとに制限かけることもできる。
     'DEFAULT_THROTTLE_RATES': {
         'rates_anon_throttle': '20/min',
     },
+    'TEST_REQUEST_DEFAULT_FORMAT': 'json',
 }
 
 SIMPLE_JWT = {

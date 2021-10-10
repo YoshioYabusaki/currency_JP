@@ -1,7 +1,7 @@
 from currency.views import (
     ContactUsCreateView, ContactUsListView, GeneratePasswordView, GoodCafeListView,
     RateCreateView, RateDeleteView, RateDetailView, RateListView, RateUpdateView,
-    SourceCreateView, SourceDeleteView, SourceDetailView, SourceListView, SourceUpdateView,
+    SourceCreateView, SourceDeleteView, SourceDetailView, SourceListView, SourceRateListView, SourceUpdateView,
     response_codes,
     # rates_list_api_example,
 )
@@ -20,6 +20,7 @@ urlpatterns = [
     path('source/list/', SourceListView.as_view(), name='source-list'),
     path('source/create/', SourceCreateView.as_view(), name='source-create'),
     path('source/details/<int:pk>/', SourceDetailView.as_view(), name='source-details'),  # idをパスの一部に↓<int:pk>
+    path('source&rate/list/', SourceRateListView.as_view(), name='source&rate-list'),
     path('source/update/<int:pk>/', SourceUpdateView.as_view(), name='source-update'),
     path('source/delete/<int:pk>/', SourceDeleteView.as_view(), name='source-delete'),
 

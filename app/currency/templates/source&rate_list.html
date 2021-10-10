@@ -1,0 +1,80 @@
+{% extends 'base.html' %}
+
+{% load static %}
+
+{% block main_content %}
+
+<caption><font size="6" style="color:green"><b>Source & Rate List</b></font></caption>
+<br><br>
+
+  {% for object in object_list %}
+
+    {% if source.logo %}
+      <img src="{{ source.logo.url }}" class="h100">
+    {% else %}
+      <img src="{% static 'images/no-image.png' %}" class="h100">
+    {% endif %}
+    <br>
+    ID: {{ object.id }}<br>
+    Bank name: {{ object.name }}<br>
+
+    <caption><font size="6" style="color:green"><b>Related rates</b></font></caption><br>
+
+    <table class="table table-striped">
+    <thead>
+      <tr>
+        <th> ID </th>
+        <th> Source </th>
+        <th> Type </th>
+        <th> Buy </th>
+        <th> Sale </th>
+        <th> Created </th>
+        {% if not request.user.is_authenticated %}
+          <th></th>
+        {% elif request.user.is_authenticated %}
+          <th> Actions </th>
+        {% endif %}
+      </tr>
+    </thead>
+
+    <tbody>
+      {% for rate in object.rates.all %}
+        <tr>
+          <td>{{ rate.id }}</td>
+          <td>{{ rate.source.name }}</td>
+          <td>{{ rate.get_type_display }}</td>
+          <td>{{ rate.buy }}</td>
+          <td>{{ rate.sale }}</td>
+          <td>{{ rate.created }}</td>
+
+          <!--Action buttons-->
+          {% if not request.user.is_authenticated %}
+            <td></td>
+          {% elif request.user.is_authenticated %}
+            <td>
+              <div class="dropdown">
+                <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton"
+                        data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                  Actions
+                </button>
+                <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                  <a class="dropdown-item" href="{% url 'currency:rate-details' rate.pk %}">details</a>
+
+                  {% if request.user.is_superuser %}
+                    <a class="dropdown-item" href="{% url 'currency:rate-update' rate.pk %}">update</a>
+                    <a class="dropdown-item" href="{% url 'currency:rate-delete' rate.pk %}">delete</a>
+                  {% endif %}
+                </div>
+              </div>
+            </td>
+          {% endif %}
+
+        </tr>
+      {% endfor %}
+    </tbody>
+
+    </table>
+
+  {% endfor %}
+
+{% endblock %}

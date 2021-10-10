@@ -23,7 +23,9 @@ class GeneratePasswordView(TemplateView):
 
 class RateListView(ListView):  # ListView関数を使うと、以下簡単に書ける
     queryset = Rate.objects.all().select_related('source').order_by('-created')
-    # .select_related('source')はRateとSourceをJOINする
+    # .select_relatedはDBでRateとSourceをJOINする
+    # .prefetch_relatedはふたつの別リクエストを最後にpythonが結びつける
+    # .defer('created')を付けることで要らないモデルを無視させることができる
     template_name = 'rate_list.html'  # templatesフォルダにcurrencyフォルダ作り、このhtmlを入れれば本行書く必要なし。しかし。
 
     # ターミナルにCOOKIEを表示させる
@@ -89,6 +91,13 @@ class SourceCreateView(UserPassesTestMixin, CreateView):
 class SourceDetailView(LoginRequiredMixin, DetailView):
     queryset = Source.objects.all()
     template_name = 'source_details.html'
+
+
+class SourceRateListView(ListView):
+    queryset = Source.objects.all().prefetch_related('rates')
+    # .select_relatedはDBでRateとSourceをJOINする
+    # .prefetch_relatedはふたつの別リクエストを最後にpythonが結びつける
+    template_name = 'source&rate_list.html'
 
 
 class SourceUpdateView(UserPassesTestMixin, UpdateView):
