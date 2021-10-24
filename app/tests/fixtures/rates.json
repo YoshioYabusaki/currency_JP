@@ -1,0 +1,46 @@
+[
+  {
+    "model": "currency.rate",
+    "pk": 1,
+    "fields": {
+      "sale": "26.50",
+      "buy": "26.35",
+      "created": "2021-10-15T13:04:14.627Z",
+      "source": 1,
+      "type": "USD"
+    }
+  },
+  {
+    "model": "currency.rate",
+    "pk": 2,
+    "fields": {
+      "sale": "30.70",
+      "buy": "30.45",
+      "created": "2021-10-15T13:04:14.744Z",
+      "source": 1,
+      "type": "EUR"
+    }
+  },
+  {
+    "model": "currency.rate",
+    "pk": 3,
+    "fields": {
+      "sale": "26.55",
+      "buy": "26.15",
+      "created": "2021-10-15T13:04:15.122Z",
+      "source": 3,
+      "type": "USD"
+    }
+  },
+  {
+    "model": "currency.rate",
+    "pk": 4,
+    "fields": {
+      "sale": "30.70",
+      "buy": "30.10",
+      "created": "2021-10-15T13:04:15.230Z",
+      "source": 3,
+      "type": "EUR"
+    }
+  }
+]

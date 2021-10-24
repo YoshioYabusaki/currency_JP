@@ -1,7 +1,5 @@
 from currency.models import Rate, Source
 
-from django.urls import reverse
-
 
 def test_get_rates(api_client_auth):
     url = '/api/v1/rates/'
@@ -38,31 +36,45 @@ def test_post_valid(api_client_auth):
     assert Rate.objects.count() == rates_initial_count + 1
 
 
+def test_put_invalid(api_client_auth):
+    url = '/api/v1/rates/1/'
+    json_data = {}
+    response = api_client_auth.put(url, data=json_data)
+    assert response.status_code == 400
+    assert response.json() == {
+        'source': ['This field is required.'],
+        'buy': ['This field is required.'],
+        'sale': ['This field is required.'],
+    }
+
+
 def test_put_valid(api_client_auth):
+    rates_initial_count = Rate.objects.count()
     source = Source.objects.last()
     url = '/api/v1/rates/1/'
-
     json_data = {
         'source': source.pk,
-        'buy': 27,
-        'sale': 28,
+        'buy': 29,
+        'sale': 30,
     }
     response = api_client_auth.put(url, data=json_data)
-    breakpoint()
+    assert response.status_code == 200
+    assert response.json()['buy'] == '29.00'
+    assert response.json()['sale'] == '30.00'
+    assert response.json()['type'] == 'USD'
+    assert Rate.objects.count() == rates_initial_count
 
 
-# my_data = {
-#       "id": 230,
-#       "source_obj": {
-#         "id": 1,
-#         "name": "alfabank",
-#       },
-#       "type": "USD",
-#       "buy": "24.00",
-#       "sale": "25.00",
-#       "created": "2021-10-07T11:37:39.082140+03:00",
-#     }
+def test_delete_rates_invalid(api_client_auth):
+    url = '/api/v1/rates/1000000/'
+    response = api_client_auth.delete(url)
+    assert response.status_code == 404
+    assert response.json() == {'detail': 'Not found.'}
 
 
-# このurlが実際のdbにつながっているかどうか解明すべし
-    # その可否でオブジェクトの定義の仕方が異なってくる
+def test_delete_rates_valid(api_client_auth):
+    rates_initial_count = Rate.objects.count()
+    url = '/api/v1/rates/4/'
+    response = api_client_auth.delete(url)
+    assert response.status_code == 204
+    assert Rate.objects.count() == rates_initial_count - 1

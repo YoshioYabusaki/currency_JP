@@ -1,4 +1,4 @@
-from settings.settings import *
+from settings.settings import *  # noqa
 
 
 DEBUG = False

@@ -9,8 +9,8 @@
 
   {% for object in object_list %}
 
-    {% if source.logo %}
-      <img src="{{ source.logo.url }}" class="h100">
+    {% if object.logo %}
+      <img src="{{ object.logo.url }}" class="h100">
     {% else %}
       <img src="{% static 'images/no-image.png' %}" class="h100">
     {% endif %}

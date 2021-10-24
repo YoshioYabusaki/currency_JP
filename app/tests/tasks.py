@@ -1,7 +1,7 @@
+from unittest.mock import MagicMock
+
 from currency.models import Rate
 from currency.tasks import parse_monobank, parse_privatbank, parse_vkurse_dp_ua
-
-from unittest.mock import MagicMock
 
 
 def test_parse_vkurse(mocker):

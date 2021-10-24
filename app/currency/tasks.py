@@ -1,3 +1,4 @@
+import re
 from decimal import Decimal
 
 from bs4 import BeautifulSoup
@@ -9,8 +10,6 @@ from currency import model_choices as mch
 
 from django.conf import settings
 from django.core.mail import send_mail
-
-import re
 
 import requests
 
