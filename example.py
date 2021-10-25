@@ -2,6 +2,8 @@ from decimal import Decimal
 
 from bs4 import BeautifulSoup
 
+import re
+
 import requests
 
 
@@ -9,20 +11,20 @@ def round_currency(num) -> object:
     return Decimal(num).quantize(Decimal('.01'))
 
 
-currency_url = 'https://www.ukrgasbank.com/'
+currency_url = 'https://alfabank.ua/ru/currency-exchange'
 response = requests.get(currency_url)
 
-source = 'АБ «УКРГАЗБАНК»'
+source = 'alfa'
 soup = BeautifulSoup(response.text, 'html.parser')
 
-rates = soup.find_all("td", {"class": "val"})
+rates = soup.find_all("h4", {"class": "exchange-rate-tabs__info-value"})
 
-usd_buy = round_currency(rates[0].text) / 100
-usd_sale = round_currency(rates[1].text) / 100
-eur_buy = round_currency(rates[3].text) / 100
-eur_sale = round_currency(rates[4].text) / 100
+usd_buy = round_currency(rates[0].text.strip())
+usd_sale = round_currency(rates[1].text.strip())
+eur_buy = round_currency(rates[2].text.strip())
+eur_sale = round_currency(rates[3].text.strip())
 
-# print(source, usd_buy, usd_sale, eur_buy, eur_sale)
+print(source, usd_buy, usd_sale, eur_buy, eur_sale)
 
 
 # currency_url = 'https://www.oschadbank.ua/'

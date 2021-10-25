@@ -1,0 +1,63 @@
+[
+
+  {
+    "model": "currency.source",
+    "pk": 1,
+    "fields": {
+      "name": "alfabank",
+      "source_url": "https://alfabank.ua/ru",
+      "logo": "logos/1/alfabank.png",
+      "code_name": "CODE_NAME_ALFABANK"
+    }
+  },
+  {
+    "model": "currency.source",
+    "pk": 2,
+    "fields": {
+      "name": "monobank",
+      "source_url": "https://www.monobank.ua/?lang=ru",
+      "logo": "logos/2/monobank.png",
+      "code_name": "CODE_NAME_MONOBANK"
+    }
+  },
+  {
+    "model": "currency.source",
+    "pk": 3,
+    "fields": {
+      "name": "PrivatBank",
+      "source_url": "https://privatbank.ua/ru",
+      "logo": "logos/3/PrivatBank.png",
+      "code_name": "CODE_NAME_PRIVATBANK"
+    }
+  },
+  {
+    "model": "currency.source",
+    "pk": 4,
+    "fields": {
+      "name": "vkurse.dp.ua",
+      "source_url": "http://vkurse.dp.ua/",
+      "logo": "logos/4/vkurse.png",
+      "code_name": "CODE_NAME_VKURSE_DP_UA"
+    }
+  },
+  {
+    "model": "currency.source",
+    "pk": 5,
+    "fields": {
+      "name": "otpbank",
+      "source_url": "https://ru.otpbank.com.ua/",
+      "logo": "logos/5/otp-logo.png",
+      "code_name": "CODE_NAME_OTPBANK"
+    }
+  },
+  {
+    "model": "currency.source",
+    "pk": 6,
+    "fields": {
+      "name": "ukrgasbank",
+      "source_url": "https://www.ukrgasbank.com/",
+      "logo": "logos/6/ukrgasbank.jpg",
+      "code_name": "CODE_NAME_UKRGASBANK"
+    }
+  }
+]

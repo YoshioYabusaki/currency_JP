@@ -35,3 +35,9 @@ beat:
 
 venv:
 	python3 -m venv env
+
+pytest:
+	pytest ./app/tests/ --cov=app --cov-report html && coverage report --fail-under=74
+
+show-coverage:  ## open coverage HTML report in default browser
+	python3 -c "import webbrowser; webbrowser.open('.pytest_cache/coverage/index.html')"

@@ -1,8 +1,9 @@
 from currency.views import (
     ContactUsCreateView, ContactUsListView, GeneratePasswordView, GoodCafeListView,
     RateCreateView, RateDeleteView, RateDetailView, RateListView, RateUpdateView,
-    SourceCreateView, SourceDeleteView, SourceDetailView, SourceListView, SourceUpdateView,
-    response_codes
+    SourceCreateView, SourceDeleteView, SourceDetailView, SourceListView, SourceRateListView, SourceUpdateView,
+    response_codes,
+    # rates_list_api_example,
 )
 
 from django.urls import path
@@ -19,6 +20,7 @@ urlpatterns = [
     path('source/list/', SourceListView.as_view(), name='source-list'),
     path('source/create/', SourceCreateView.as_view(), name='source-create'),
     path('source/details/<int:pk>/', SourceDetailView.as_view(), name='source-details'),  # idをパスの一部に↓<int:pk>
+    path('source-and-rate/list/', SourceRateListView.as_view(), name='source-and-rate-list'),
     path('source/update/<int:pk>/', SourceUpdateView.as_view(), name='source-update'),
     path('source/delete/<int:pk>/', SourceDeleteView.as_view(), name='source-delete'),
 
@@ -28,6 +30,9 @@ urlpatterns = [
     path('good/cafe/', GoodCafeListView.as_view(), name='good-cafe-list'),
     path('response-codes/', response_codes),  # パス名とviewsで作った関数名
     path('gen-pass/', GeneratePasswordView.as_view()),
+
+    # API
+    # path('api/rate/list/', rates_list_api_example),
 
     # path('rate/list/', rate_list),
     # path('rate/create/', rate_create),
