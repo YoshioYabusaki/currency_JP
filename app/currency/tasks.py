@@ -282,9 +282,9 @@ def parse_vkurse_dp_ua():
     rates = response.json()
     # del rates["Rub"]
 
-    usd_buy = rates['Dollar']['buy']
-    usd_sale = rates['Dollar']['sale']
-    eur_buy = rates['Euro']['buy']
+    usd_buy = re.sub(r"[^\d.]", "", rates['Dollar']['buy'])
+    usd_sale = re.sub(r"[^\d.]", "", rates['Dollar']['sale'])
+    eur_buy = re.sub(r"[^\d.]", "", rates['Euro']['buy'])
     eur_sale = re.sub(r"[^\d.]", "", rates['Euro']['sale'])  # emojiを削除
 
     currency_dict = {'ccy': mch.TYPE_USD, 'buy': usd_buy, 'sale': usd_sale}, \

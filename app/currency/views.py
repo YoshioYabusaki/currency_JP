@@ -97,7 +97,7 @@ class SourceRateListView(ListView):
     queryset = Source.objects.all().prefetch_related('rates')
     # .select_relatedはDBでRateとSourceをJOINする
     # .prefetch_relatedはふたつの別リクエストを最後にpythonが結びつける
-    template_name = 'source&rate_list.html'
+    template_name = 'source_and_rate_list.html'
 
 
 class SourceUpdateView(UserPassesTestMixin, UpdateView):
