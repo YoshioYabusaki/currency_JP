@@ -1,3 +1,4 @@
+import datetime
 import re
 from decimal import Decimal
 
@@ -7,8 +8,10 @@ from celery import shared_task
 
 from currency import consts
 from currency import model_choices as mch
+from currency.services import get_latest_rates
 
 from django.conf import settings
+from django.core.cache import cache
 from django.core.mail import send_mail
 
 import requests
@@ -67,6 +70,7 @@ def parse_alfabank():
         if (
                 last_rate is None or  # データベースが空の場合
                 last_rate.buy != buy or  # buyに変化があった場合
+
                 last_rate.sale != sale  # saleに変化があった場合
         ):
             Rate.objects.create(
@@ -75,6 +79,8 @@ def parse_alfabank():
                 buy=buy,
                 sale=sale,
             )
+            cache.delete(consts.CACHE_KEY_LATEST_RATES)
+            get_latest_rates()
 
 
 @shared_task
@@ -121,6 +127,8 @@ def parse_monobank():
                     buy=buy,
                     sale=sale,
                 )
+                cache.delete(consts.CACHE_KEY_LATEST_RATES)
+                get_latest_rates()
 
 
 @shared_task
@@ -167,6 +175,8 @@ def parse_ukrgasbank():
                 buy=buy,
                 sale=sale,
             )
+            cache.delete(consts.CACHE_KEY_LATEST_RATES)
+            get_latest_rates()
 
 
 @shared_task
@@ -217,6 +227,8 @@ def parse_otpbank():
                 buy=buy,
                 sale=sale,
             )
+            cache.delete(consts.CACHE_KEY_LATEST_RATES)
+            get_latest_rates()
 
 
 @shared_task
@@ -264,6 +276,8 @@ def parse_privatbank():
                     buy=buy,
                     sale=sale,
                 )
+                cache.delete(consts.CACHE_KEY_LATEST_RATES)
+                get_latest_rates()
 
 
 @shared_task
@@ -311,6 +325,69 @@ def parse_vkurse_dp_ua():
                 buy=buy,
                 sale=sale,
             )
+            cache.delete(consts.CACHE_KEY_LATEST_RATES)
+            get_latest_rates()
+
+
+@shared_task
+def parse_privatbank_archive():
+    from currency.models import Rate, Source  # タスク内でmodelsを使う場合はタスク内でインポートする
+
+    source = Source.objects.get_or_create(
+        code_name=consts.CODE_NAME_PRIVATBANK,
+        defaults={'name': 'PrivatBank'},
+    )[0]
+    available_currency_types = {
+        'USD': mch.TYPE_USD,
+        'EUR': mch.TYPE_EUR,
+    }
+
+    # создать список дат 'YYYY.mm.dd'
+    privatbank_rates = Rate.objects.filter(source=source).all()
+    existing_date_list = []
+    for the_rate in privatbank_rates:
+        the_created_date = the_rate.created.strftime('%Y.%m.%d')
+        if the_created_date not in existing_date_list:
+            existing_date_list.append(the_created_date)
+
+    d_today = datetime.date.today()
+    set_how_many_days = d_today - datetime.timedelta((365 * 4) + 1)  # 4 years (365 * 4) + 1
+    required_date_list = []
+    while d_today > set_how_many_days:
+        required_date_list.append(set_how_many_days.strftime('%Y.%m.%d'))
+        set_how_many_days = set_how_many_days + datetime.timedelta(1)
+
+    target_date_list = sorted(list(set(required_date_list) - set(existing_date_list)))
+
+    for the_date in target_date_list:
+
+        the_date_for_url = the_date[8:10] + '.' + the_date[5:7] + '.' + the_date[0:4]  # дата 'dd.mm.YYYY'
+        currency_url = f'https://api.privatbank.ua/p24api/exchange_rates?json&date={the_date_for_url}'
+
+        response = requests.get(currency_url)
+        response.raise_for_status()
+        rates = response.json()
+        exchange_rates = rates['exchangeRate']
+
+        for the_value in exchange_rates:
+            if 'currency' in the_value:
+                currency_type = the_value['currency']
+                if currency_type in available_currency_types:
+                    buy = round_currency(the_value['purchaseRate'])
+                    sale = round_currency(the_value['saleRate'])
+                    ct = available_currency_types[currency_type]
+                    the_datetime = datetime.datetime.strptime(the_date, '%Y.%m.%d')
+
+                    Rate.objects.create(
+                        source=source,
+                        type=ct,
+                        buy=buy,
+                        sale=sale,
+                    )
+                    the_rate = Rate.objects.last()
+                    the_rate.created = the_datetime
+                    the_rate.save()
+                    # print(the_date)
 
 
 # @shared_task
@@ -321,45 +398,11 @@ def parse_vkurse_dp_ua():
     # sleep(sleep_time)
     # print(f'Task completed in {sleep_time}')
 
-
-# @shared_task
-# def parse_oschadbank():
-#     from currency.models import Rate
-#
-#     currency_url = 'https://www.oschadbank.ua/ua'
-#     response = requests.get(currency_url)
-#
-#     response.raise_for_status()
-#
-#     source = 'Ощадбанк'
-#     soup = BeautifulSoup(response.text, 'html.parser')
-#
-#     usd_buy = round_currency(soup.find("strong", {"class": "buy-USD"}).text.strip())
-#     usd_sale = round_currency(soup.find("strong", {"class": "sell-USD"}).text.strip())
-#     eur_buy = round_currency(soup.find("strong", {"class": "buy-EUR"}).text.strip())
-#     eur_sale = round_currency(soup.find("strong", {"class": "sell-EUR"}).text.strip())
-#
-#     currency_dict = {'ccy': mch.TYPE_USD, 'buy': usd_buy, 'sale': usd_sale}, \
-#                     {'ccy': mch.TYPE_EUR, 'buy': eur_buy, 'sale': eur_sale}
-#
-#     for rate in currency_dict:
-#         ct = rate['ccy']
-#         buy = rate['buy']
-#         sale = rate['sale']
-#
-#         last_rate = Rate.objects.filter(
-#             source=source,
-#             type=ct,
-#         ).order_by('created').last()
-#
-#         if (
-#                 last_rate is None or
-#                 last_rate.buy != buy or
-#                 last_rate.sale != sale
-#         ):
-#             Rate.objects.create(
-#                 source=source,
-#                 type=ct,
-#                 buy=buy,
-#                 sale=sale,
-#             )
+    # source = Source.objects.get_or_create(
+    #     code_name=consts.CODE_NAME_PRIVATBANK,
+    #     defaults={'name': 'PrivatBank'},
+    # )[0]
+    # available_currency_types = {
+    #     'USD': mch.TYPE_USD,
+    #     'EUR': mch.TYPE_EUR,
+    # }

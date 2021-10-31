@@ -1,5 +1,5 @@
 from currency.views import (
-    ContactUsCreateView, ContactUsListView, GeneratePasswordView, GoodCafeListView,
+    ContactUsCreateView, ContactUsListView, GeneratePasswordView, GoodCafeListView, LatestRatesView,
     RateCreateView, RateDeleteView, RateDetailView, RateListView, RateUpdateView,
     SourceCreateView, SourceDeleteView, SourceDetailView, SourceListView, SourceRateListView, SourceUpdateView,
     response_codes,
@@ -16,6 +16,7 @@ urlpatterns = [
     path('rate/details/<int:pk>/', RateDetailView.as_view(), name='rate-details'),  # 以前は<int:rate_id>と書いたが、pkと書くルール
     path('rate/update/<int:pk>/', RateUpdateView.as_view(), name='rate-update'),  # これら三つを最初から書くようになろう
     path('rate/delete/<int:pk>/', RateDeleteView.as_view(), name='rate-delete'),
+    path('rate/latest/', LatestRatesView.as_view(), name='rate-latest'),
 
     path('source/list/', SourceListView.as_view(), name='source-list'),
     path('source/create/', SourceCreateView.as_view(), name='source-create'),

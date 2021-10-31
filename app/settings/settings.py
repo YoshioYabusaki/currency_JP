@@ -127,7 +127,7 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = 'en-us'
 
-TIME_ZONE = 'Europe/Kiev'
+TIME_ZONE = 'UTC'
 
 USE_I18N = True
 
@@ -195,7 +195,13 @@ CELERY_BEAT_SCHEDULE = {
         'task': 'currency.tasks.parse_vkurse_dp_ua',
         'schedule': crontab(minute='*/15'),
     },
+    # 'privatbank_archive': {
+    #     'task': 'currency.tasks.parse_privatbank_archive',
+    #     'schedule': crontab(minute='*/15'),
+    # },
 }
+
+SESSION_ENGINE = 'django.contrib.sessions.backends.cache'
 
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
@@ -208,6 +214,13 @@ REST_FRAMEWORK = {
         'rates_anon_throttle': '20/min',
     },
     'TEST_REQUEST_DEFAULT_FORMAT': 'json',
+}
+
+CACHES = {
+    'default': {
+        'BACKEND': 'django.core.cache.backends.memcached.PyMemcacheCache',
+        'LOCATION': '127.0.0.1:11211',
+    }
 }
 
 SIMPLE_JWT = {
