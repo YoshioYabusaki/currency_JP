@@ -1,5 +1,6 @@
 from currency.forms import RateForm, SourceForm
 from currency.models import ContactUs, GoodCafe, Rate, Source
+from currency.services import get_latest_rates
 from currency.tasks import contact_us
 from currency.utils import generate_password as gen_pass
 
@@ -177,6 +178,15 @@ class GoodCafeListView(ListView):
 def response_codes(request):
     response = HttpResponse('Status code', status=301, headers={'Location': '/rate/list/'})
     return response
+
+
+class LatestRatesView(TemplateView):
+    template_name = 'latest_rates.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['rate_list'] = get_latest_rates()
+        return context
 
 
 # def rate_list(request):
