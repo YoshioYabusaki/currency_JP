@@ -195,10 +195,6 @@ CELERY_BEAT_SCHEDULE = {
         'task': 'currency.tasks.parse_vkurse_dp_ua',
         'schedule': crontab(minute='*/15'),
     },
-    # 'privatbank_archive': {
-    #     'task': 'currency.tasks.parse_privatbank_archive',
-    #     'schedule': crontab(minute='*/15'),
-    # },
 }
 
 SESSION_ENGINE = 'django.contrib.sessions.backends.cache'

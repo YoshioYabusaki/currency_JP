@@ -342,67 +342,105 @@ def parse_privatbank_archive():
         'EUR': mch.TYPE_EUR,
     }
 
+    def date_generator():
+        from_date = datetime.datetime.today()
+        while True:
+            yield from_date  # 関数を一時的に実行停止できる。小分けにして返すことでメモリ消費量を節約する。
+            from_date = from_date - datetime.timedelta(days=1)  # 今日から1日ずつ遡る
+
+    for date_parsed in date_generator():
+        if date_parsed.year == 2010:  # 昨日から2010年までの毎日
+            break  # 2010年まで遡ったらストップ
+
+        if not Rate.objects.filter(
+                created__date=date_parsed,
+                source=source,
+                type__in=available_currency_types.values(),
+        ).exists():  # filterに該当するオブジェクトでなければ下に進む
+
+            date_for_url = {'date': f'{date_parsed.day}.{date_parsed.month}.{date_parsed.year}'}
+            currency_url = requests.get(
+                'https://api.privatbank.ua/p24api/exchange_rates?json',
+                params=date_for_url
+            )   # urlを生成する
+
+            response = requests.get(currency_url.url)
+            response.raise_for_status()
+            rates = response.json()
+            exchange_rates = rates['exchangeRate']
+
+            for the_value in exchange_rates:
+                if 'currency' in the_value:
+                    currency_type = the_value['currency']
+                    if currency_type in available_currency_types:
+                        buy = round_currency(the_value['purchaseRate'])
+                        sale = round_currency(the_value['saleRate'])
+                        ct = available_currency_types[currency_type]
+
+                        Rate.objects.create(
+                            source=source,
+                            type=ct,
+
+                            buy=buy,
+                            sale=sale,
+                        )
+                        the_rate = Rate.objects.last()
+                        the_rate.created = date_parsed
+                        the_rate.save()
+                        # print(f'object created: {date_parsed}')
+
+    # оригинальный вариант без исправления
     # создать список дат 'YYYY.mm.dd'
-    privatbank_rates = Rate.objects.filter(source=source).all()
-    existing_date_list = []
-    for the_rate in privatbank_rates:
-        the_created_date = the_rate.created.strftime('%Y.%m.%d')
-        if the_created_date not in existing_date_list:
-            existing_date_list.append(the_created_date)
-
-    d_today = datetime.date.today()
-    set_how_many_days = d_today - datetime.timedelta((365 * 4) + 1)  # 4 years (365 * 4) + 1
-    required_date_list = []
-    while d_today > set_how_many_days:
-        required_date_list.append(set_how_many_days.strftime('%Y.%m.%d'))
-        set_how_many_days = set_how_many_days + datetime.timedelta(1)
-
-    target_date_list = sorted(list(set(required_date_list) - set(existing_date_list)))
-
-    for the_date in target_date_list:
-
-        the_date_for_url = the_date[8:10] + '.' + the_date[5:7] + '.' + the_date[0:4]  # дата 'dd.mm.YYYY'
-        currency_url = f'https://api.privatbank.ua/p24api/exchange_rates?json&date={the_date_for_url}'
-
-        response = requests.get(currency_url)
-        response.raise_for_status()
-        rates = response.json()
-        exchange_rates = rates['exchangeRate']
-
-        for the_value in exchange_rates:
-            if 'currency' in the_value:
-                currency_type = the_value['currency']
-                if currency_type in available_currency_types:
-                    buy = round_currency(the_value['purchaseRate'])
-                    sale = round_currency(the_value['saleRate'])
-                    ct = available_currency_types[currency_type]
-                    the_datetime = datetime.datetime.strptime(the_date, '%Y.%m.%d')
-
-                    Rate.objects.create(
-                        source=source,
-                        type=ct,
-                        buy=buy,
-                        sale=sale,
-                    )
-                    the_rate = Rate.objects.last()
-                    the_rate.created = the_datetime
-                    the_rate.save()
-                    # print(the_date)
-
+    # privatbank_rates = Rate.objects.filter(source=source).all()
+    # existing_date_list = []
+    # for the_rate in privatbank_rates:
+    #     the_created_date = the_rate.created.strftime('%Y.%m.%d')
+    #     if the_created_date not in existing_date_list:
+    #         existing_date_list.append(the_created_date)
+    #
+    # d_today = datetime.date.today()
+    # set_how_many_days = d_today - datetime.timedelta((365 * 4) + 1)  # 4 years (365 * 4) + 1
+    # required_date_list = []
+    # while d_today > set_how_many_days:
+    #     required_date_list.append(set_how_many_days.strftime('%Y.%m.%d'))
+    #     set_how_many_days = set_how_many_days + datetime.timedelta(1)
+    #
+    # target_date_list = sorted(list(set(required_date_list) - set(existing_date_list)))
+    #
+    # for the_date in target_date_list:
+    #
+    #     the_date_for_url = the_date[8:10] + '.' + the_date[5:7] + '.' + the_date[0:4]  # дата 'dd.mm.YYYY'
+    #     currency_url = f'https://api.privatbank.ua/p24api/exchange_rates?json&date={the_date_for_url}'
+    #
+    #     response = requests.get(currency_url)
+    #     response.raise_for_status()
+    #     rates = response.json()
+    #     exchange_rates = rates['exchangeRate']
+    #
+    #     for the_value in exchange_rates:
+    #         if 'currency' in the_value:
+    #             currency_type = the_value['currency']
+    #             if currency_type in available_currency_types:
+    #                 buy = round_currency(the_value['purchaseRate'])
+    #                 sale = round_currency(the_value['saleRate'])
+    #                 ct = available_currency_types[currency_type]
+    #                 the_datetime = datetime.datetime.strptime(the_date, '%Y.%m.%d')
+    #
+    #                 Rate.objects.create(
+    #                     source=source,
+    #                     type=ct,
+    #                     buy=buy,
+    #                     sale=sale,
+    #                 )
+    #                 the_rate = Rate.objects.last()
+    #                 the_rate.created = the_datetime
+    #                 the_rate.save()
+    #                 # print(f'object created: {the_date}')
 
 # @shared_task
 # def debug_task(sleep_time: int = 5):
 #
 #     print(f'Count Rates: {Rate.objects.count()}')
-    # from time import sleep
-    # sleep(sleep_time)
-    # print(f'Task completed in {sleep_time}')
-
-    # source = Source.objects.get_or_create(
-    #     code_name=consts.CODE_NAME_PRIVATBANK,
-    #     defaults={'name': 'PrivatBank'},
-    # )[0]
-    # available_currency_types = {
-    #     'USD': mch.TYPE_USD,
-    #     'EUR': mch.TYPE_EUR,
-    # }
+# from time import sleep
+# sleep(sleep_time)
+# print(f'Task completed in {sleep_time}')
