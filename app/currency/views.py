@@ -1,15 +1,19 @@
+from currency.filters import RateFilter
 from currency.forms import RateForm, SourceForm
 from currency.models import ContactUs, GoodCafe, Rate, Source
 from currency.services import get_latest_rates
 from currency.tasks import contact_us
 from currency.utils import generate_password as gen_pass
 
+from django_filters.views import FilterView
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.http import HttpResponse
 from django.urls import reverse_lazy
 from django.views.generic import (
     CreateView, DeleteView, DetailView, ListView, TemplateView, UpdateView
 )
+
+from urllib.parse import urlencode
 
 
 class GeneratePasswordView(TemplateView):
@@ -22,12 +26,26 @@ class GeneratePasswordView(TemplateView):
         return context
 
 
-class RateListView(ListView):  # ListView関数を使うと、以下簡単に書ける
+class RateListView(FilterView):  # ListView関数を使うと、以下簡単に書ける
     queryset = Rate.objects.all().select_related('source').order_by('-created')
     # .select_relatedはDBでRateとSourceをJOINする
     # .prefetch_relatedはふたつの別リクエストを最後にpythonが結びつける
     # .defer('created')を付けることで要らないモデルを無視させることができる
     template_name = 'rate_list.html'  # templatesフォルダにcurrencyフォルダ作り、このhtmlを入れれば本行書く必要なし。しかし。
+    paginate_by = 25
+    filterset_class = RateFilter
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+
+        get_parameters = {}
+        for key, value in self.request.GET.items():
+            if key != 'page':
+                get_parameters[key] = value
+
+        context['pagination_params'] = urlencode(get_parameters)
+
+        return context
 
     # ターミナルにCOOKIEを表示させる
     # def get(self, request, *args, **kwargs):
