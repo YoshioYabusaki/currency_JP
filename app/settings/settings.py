@@ -197,7 +197,7 @@ CELERY_BEAT_SCHEDULE = {
     },
 }
 
-SESSION_ENGINE = 'django.contrib.sessions.backends.cache'
+SESSION_ENGINE = 'django.contrib.sessions.backends.cache'  # コメント化するとキャッシュを止められる
 
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (

@@ -25,3 +25,9 @@ class User(AbstractUser):
     )
 
     email = models.EmailField('email address', blank=True, unique=True)
+
+    def save(self, *args, **kwargs):  # model内のsave()機能内を管理
+
+        # print('セーブの前で')
+        super().save(*args, **kwargs)
+        # print('セーブの後')
