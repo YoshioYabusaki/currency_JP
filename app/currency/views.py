@@ -1,3 +1,5 @@
+from urllib.parse import urlencode
+
 from currency.filters import RateFilter
 from currency.forms import RateForm, SourceForm
 from currency.models import ContactUs, GoodCafe, Rate, Source
@@ -5,7 +7,6 @@ from currency.services import get_latest_rates
 from currency.tasks import contact_us
 from currency.utils import generate_password as gen_pass
 
-from django_filters.views import FilterView
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.http import HttpResponse
 from django.urls import reverse_lazy
@@ -13,7 +14,7 @@ from django.views.generic import (
     CreateView, DeleteView, DetailView, ListView, TemplateView, UpdateView
 )
 
-from urllib.parse import urlencode
+from django_filters.views import FilterView
 
 
 class GeneratePasswordView(TemplateView):

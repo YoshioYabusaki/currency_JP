@@ -1,8 +1,8 @@
-import django_filters
-
 from currency.models import Rate
 
 from django.forms import DateInput
+
+import django_filters
 
 
 class RateFilter(django_filters.FilterSet):
