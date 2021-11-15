@@ -45,6 +45,7 @@ INSTALLED_APPS = [
     'drf_yasg',
     'django_filters',
     'rest_framework_simplejwt',
+    'storages',
 
     'currency',  # それぞれのмодульのurls集を独自に作ること。後の混乱を防ぐ。
     'accounts',
@@ -140,6 +141,7 @@ AUTH_USER_MODEL = 'accounts.User'  # これによりDjangoは、auth_userでは�
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.2/howto/static-files/
 
+STATIC_ROOT = BASE_DIR / '..' / 'static_content' / 'static'
 STATIC_URL = '/static/'
 STATICFILES_DIRS = [
     BASE_DIR / 'static'
@@ -244,3 +246,12 @@ SIMPLE_JWT = {
     'SLIDING_TOKEN_LIFETIME': timedelta(minutes=5),
     'SLIDING_TOKEN_REFRESH_LIFETIME': timedelta(days=1),
 }
+
+# AWS_S3_REGION_NAME = 'fra1'
+# AWS_S3_ENDPOINT_URL =
+# AWS_ACCESS_KEY_ID =
+# AWS_SECRET_ACCESS_KEY =
+# STATICFILES_STORAGE =
+# AWS_STORAGE_BUCKET_NAME =
+# STATIC_URL =
+# AWS_DEFAULT_ACL = 'public-read'

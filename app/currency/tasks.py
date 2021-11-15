@@ -387,7 +387,7 @@ def parse_privatbank_archive():
                         the_rate = Rate.objects.last()
                         the_rate.created = date_parsed
                         the_rate.save()
-                        # print(f'object created: {date_parsed}')
+                        print(f'object created: {date_parsed}')  # noqa
 
     # оригинальный вариант без исправления
     # создать список дат 'YYYY.mm.dd'
@@ -435,7 +435,7 @@ def parse_privatbank_archive():
     #                 the_rate = Rate.objects.last()
     #                 the_rate.created = the_datetime
     #                 the_rate.save()
-    #                 # print(f'object created: {the_date}')
+    #                 print(f'object created: {the_date}')  # noqa
 
 # @shared_task
 # def debug_task(sleep_time: int = 5):
