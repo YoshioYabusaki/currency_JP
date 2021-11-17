@@ -255,3 +255,8 @@ SIMPLE_JWT = {
 # AWS_STORAGE_BUCKET_NAME =
 # STATIC_URL =
 # AWS_DEFAULT_ACL = 'public-read'
+
+try:
+    from settings.settings_local import *
+except ImportError:
+    print('No local settings\n' * 5)

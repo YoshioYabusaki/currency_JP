@@ -129,3 +129,4 @@ dmypy.json
 .pyre/
 
 .idea/
+app/settings/settings_local.py
