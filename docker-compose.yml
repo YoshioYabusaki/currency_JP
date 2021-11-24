@@ -1,0 +1,37 @@
+version: "3"
+
+services:
+
+  memcached:
+    image: memcached
+    container_name: memcached
+    ports:
+      - "11211:11211"
+
+  rabbitmq:
+    image: rabbitmq:3-management
+    container_name: rabbitmq
+    ports:
+      - "15672:15672"
+      - "5672:5672"
+
+  postgres:
+    image: postgres:14-alpine
+    container_name: postgres
+    ports:
+      - "5432:5432"
+    environment:
+      - POSTGRES_PASSWORD=postgres-password
+      - POSTGRES_USER=db-user
+      - POSTGRES_DB=currency
+    volumes:
+      - db_data:/var/lib/postgresql/data
+
+  nginx:
+    image: nginx
+    container_name: nginx
+    ports:
+      - "80:80"
+
+volumes:
+  db_data: {}
