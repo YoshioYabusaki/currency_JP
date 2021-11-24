@@ -102,7 +102,6 @@ WSGI_APPLICATION = 'settings.wsgi.application'
 #         'NAME': BASE_DIR / 'db.sqlite3',
 #     }
 # }
-import os
 
 DATABASES = {
     'default': {
@@ -266,4 +265,3 @@ SIMPLE_JWT = {
 # AWS_STORAGE_BUCKET_NAME =
 # STATIC_URL =
 # AWS_DEFAULT_ACL = 'public-read'
-
