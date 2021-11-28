@@ -1,6 +1,9 @@
 SHELL := /bin/bash
 
-manage_py := python app/manage.py
+manage_py := docker exec -it backend python app/manage.py
+
+build:
+	cp -n .env.example .env && docker-compose up -d --build
 
 runserver:
 	$(manage_py) runserver 0:8000
