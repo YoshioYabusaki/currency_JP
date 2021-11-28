@@ -1,3 +1,4 @@
+import os
 from datetime import timedelta
 from pathlib import Path
 
@@ -12,20 +13,20 @@ from django.urls import reverse_lazy
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-7ist2%6a!h%0pio9+cxl-7n_+qwerty4+##ojsts(4!g3y**exj9klxv'
+SECRET_KEY = os.getenv('SECRET_KEY', 'super-secret-key')
+# 'django-insecure-7ist2%6a!h%0pio9+cxl-7n_+qwerty4+##ojsts(4!g3y**exj9klxv'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-# TODO move to env
-DEBUG = False
+DEBUG = os.getenv('DEBUG') == 'true'
 
-ALLOWED_HOSTS = ['*']
+ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS').split(';')
 
 # ログイン・ログアウト後の遷移を規定
 LOGIN_REDIRECT_URL = reverse_lazy('index')
 LOGOUT_REDIRECT_URL = reverse_lazy('index')
 
-HTTP_SCHEMA = 'http'
-DOMAIN = 'localhost:8000'
+HTTP_SCHEMA = os.getenv('HTTP_SCHEMA', 'http')
+DOMAIN = os.getenv('DOMAIN', 'localhost:8000')
 
 # Application definition
 
@@ -49,12 +50,12 @@ INSTALLED_APPS = [
 
     'currency',  # それぞれのмодульのurls集を独自に作ること。後の混乱を防ぐ。
     'accounts',
-    # 'silk',
+    'silk',
     'crispy_forms',
 ]
 
 MIDDLEWARE = [
-    # 'silk.middleware.SilkyMiddleware',
+    'silk.middleware.SilkyMiddleware',
 
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -97,7 +98,7 @@ WSGI_APPLICATION = 'settings.wsgi.application'
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
 
 # DATABASES = {
-#     'default': {
+#     'default.conf': {
 #         'ENGINE': 'django.db.backends.sqlite3',
 #         'NAME': BASE_DIR / 'db.sqlite3',
 #     }
@@ -106,11 +107,11 @@ WSGI_APPLICATION = 'settings.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'currency',
-        'USER': 'db-user',
-        'PASSWORD': 'postgres-password',
-        'HOST': 'localhost',
-        'PORT': '5432',
+        'NAME': os.environ['POSTGRES_DB'],
+        'USER': os.environ['POSTGRES_USER'],
+        'PASSWORD': os.environ['POSTGRES_PASSWORD'],
+        'HOST': os.environ['POSTGRES_HOST'],
+        'PORT': os.environ.get('POSTGRES_PORT', '5432'),
     }
 }
 
@@ -170,6 +171,7 @@ INTERNAL_IPS = [
     '172.31.69.226',
 ]
 
+# TODO move to env
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'  # どのようにemailを送るか
 # EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'  # shellコンソールで表示、実際には送られない
 EMAIL_HOST = 'smtp.gmail.com'
@@ -179,7 +181,14 @@ EMAIL_HOST_USER = 'python.test.yoshio@gmail.com'  # от кого
 EMAIL_HOST_PASSWORD = 'pythontest001'
 SUPPORT_EMAIL = 'python.test.yoshio@gmail.com'  # получатель この場合サポートセンター
 
-CELERY_BROKER_URL = 'amqp://localhost'  # Broker(Rabbitmq)のアドレス。ここにProducer(Django)とConsumer(Celery)がアクセスする
+# CELERY_BROKER_URL = 'amqp://rabbitmq'  # Broker(Rabbitmq)のアドレス。ここにProducer(Django)とConsumer(Celery)がアクセスする
+
+CELERY_BROKER_URL = 'amqp://{0}:{1}@{2}:{3}//'.format(
+    os.environ['RABBITMQ_DEFAULT_USER'],
+    os.environ['RABBITMQ_DEFAULT_PASS'],
+    os.getenv('RABBITMQ_DEFAULT_HOST', 'localhost'),
+    os.getenv('RABBITMQ_DEFAULT_PORT', '5672'),
+)
 
 # 定期的なタスク
 CELERY_BEAT_SCHEDULE = {
@@ -227,7 +236,7 @@ REST_FRAMEWORK = {
 CACHES = {
     'default': {
         'BACKEND': 'django.core.cache.backends.memcached.PyMemcacheCache',
-        'LOCATION': '127.0.0.1:11211',
+        'LOCATION': f'{os.environ["MEMCACHED_HOST"]}:{os.environ.get("MEMCACHED_PORT", "11211")}',
     }
 }
 
