@@ -49,6 +49,6 @@ urlpatterns = [
     url(r'^redoc/$', schema_view.with_ui('redoc', cache_timeout=0), name='schema-redoc'),
 ]
 
-urlpatterns += [url(r'^silk/', include('silk.urls', namespace='silk'))]
+# urlpatterns += [url(r'^silk/', include('silk.urls', namespace='silk'))]
 
 urlpatterns.extend(static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT))

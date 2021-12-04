@@ -50,13 +50,11 @@ INSTALLED_APPS = [
 
     'currency',  # それぞれのмодульのurls集を独自に作ること。後の混乱を防ぐ。
     'accounts',
-    'silk',
     'crispy_forms',
+    # 'silk',
 ]
 
 MIDDLEWARE = [
-    'silk.middleware.SilkyMiddleware',
-
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -69,6 +67,7 @@ MIDDLEWARE = [
 
     'currency.middlewares.ResponseTimeMiddleware',  # 登録して動かすための一行
     # 'currency.middlewares.GclidMiddleware',
+    # 'silk.middleware.SilkyMiddleware',
 ]
 
 ROOT_URLCONF = 'settings.urls'
