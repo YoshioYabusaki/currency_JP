@@ -30,17 +30,21 @@
     <ul class="navbar-nav mr-auto">
 
       <li class="nav-item">
-        <a class="nav-link" href="{% url 'currency:rate-latest' %}">latest rate</a>
+        <a class="nav-link" href="{% url 'currency:rate-latest' %}">the latest rate</a>
       </li>
-      <li class="nav-item">
-        <a class="nav-link" href="{% url 'currency:rate-list' %}">rate list</a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link" href="{% url 'currency:source-list' %}">source list</a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link" href="{% url 'currency:source-and-rate-list' %}">source&rate list</a>
-      </li>
+
+      {% if request.user.is_authenticated %}
+        <li class="nav-item">
+          <a class="nav-link" href="{% url 'currency:rate-list' %}">rate list</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="{% url 'currency:source-list' %}">source list</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="{% url 'currency:source-and-rate-list' %}">source&rate list</a>
+        </li>
+      {% endif %}
+
       <li class="nav-item">
         <a class="nav-link" href="{% url 'currency:contact-us-create' %}">contact us</a>
       </li>
