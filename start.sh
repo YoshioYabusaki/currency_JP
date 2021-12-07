@@ -3,6 +3,8 @@
 if [ "${MODE}" == "runserver" ]; then
   python app/manage.py migrate
   python app/manage.py runserver 0:8000
+elif [ "${MODE}" == "flower" ]; then
+  celery -A settings flower --address=0.0.0.0 --port=5566
 elif [ "${MODE}" == "celery" ]; then
   celery -A settings worker -l info --autoscale=10,0 --pidfile=/tmp/celery.pid
 elif [ "${MODE}" == "celerybeat" ]; then
