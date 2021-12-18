@@ -3,7 +3,7 @@
 {% load static %}
 
 {% block main_content %}
-  <caption><font size="6" style="color:green"><b>Rate list</b></font></caption><br>
+  <caption><font size="6"><b>Rate Archive</b></font></caption><br>
 
   {% if request.user.is_superuser %}
     <a class="btn btn-outline-primary" href="{% url 'currency:rate-create' %}">Create Rate</a>
@@ -12,7 +12,7 @@
 
   <form method="get">
     {{ filter.form.as_p }}
-    <button type="submit">Submit</button>
+    <button class="btn btn-outline-primary" type="submit">Submit</button>
   </form>
   <br><br>
 

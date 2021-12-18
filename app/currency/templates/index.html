@@ -2,20 +2,32 @@
 
 {% block main_content %}
 
-<!--<div class="row">-->
-<!--  <div class="btn btn-primary" href="{% url 'currency:rate-list' %}">Rate List</div>  &lt;!&ndash; urls.pyで作ったreverse(name)を使い引き継ぐ &ndash;&gt;-->
-<!--  <div class="btn btn-primary" href="{% url 'currency:source-list' %}">Source List</div>-->
-<!--  <br>-->
-<!--  <a href="{% url 'currency:contact-us-list' %}">Contact Us List</a><br>-->
-<!--  <a href="{% url 'currency:contact-us-create' %}">Contact Us Create</a><br>-->
-<!--  <br>-->
-<!--  <a href="{% url 'currency:good-cafe-list' %}">Good Cafe in Kyiv</a><br>-->
-<!--</div>-->
-
-<div class="row">
-  <div class="col-4">{% lorem %}</div>
-  <div class="col-4">{% lorem %}</div>
-  <div class="col-4">{% lorem %}</div>
-</div>
+{% if not request.user.is_authenticated %}
+  <div >
+    <center>
+      <font size="5" face='Quicksand'>
+      <br><br><br><br><br><br>
+      Hi, there!<br>
+      This is the rates book<br>
+      of Ukrainian banks.<br>
+      <br>
+      "SignUp" or "Login"<br>
+      to fully enjoy our site!
+      <br><br><br><br><br><br><br><br>
+      </font>
+    </center>
+  </div>
+{% elif request.user.is_authenticated %}
+  <div >
+    <center>
+      <font size="5" face='Corben'>
+      <br><br><br><br><br><br>
+      Welcome, {{ request.user.email }}!<br>
+      Enjoy our site!
+      <br><br><br><br><br><br><br><br>
+      </font>
+    </center>
+  </div>
+{% endif %}
 
 {% endblock %}

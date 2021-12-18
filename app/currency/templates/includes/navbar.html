@@ -1,23 +1,3 @@
-<!--<div>-->
-<!--  <div><a href="/">Home</a></div><br>-->
-
-<!--  {% if request.user.is_authenticated %}-->
-<!--    Welcome {{ request.user.first_name }} {{ request.user.last_name }}!-->
-<!--    {% if request.user.is_superuser %}-->
-<!--      You are a SUPERUSER.-->
-<!--    {% endif %}<br>-->
-<!--    your email: {{ request.user.email }}<br>-->
-<!--    <br>-->
-<!--    <div><a href="{% url 'accounts:my-profile' %}">My profile</a></div>-->
-<!--    <div><a href="{% url 'logout' %}">Logout</a></div>-->
-
-<!--  {% else %}-->
-<!--    Login & fully enjoy our site!-->
-<!--    <div><a href="{% url 'login' %}">Login</a></div>-->
-<!--    <div><a href="{% url 'accounts:sign-up' %}">SignUp</a></div>-->
-<!--  {% endif %}-->
-
-<!--</div>-->
 {% load static %}
 
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
@@ -30,27 +10,33 @@
     <ul class="navbar-nav mr-auto">
 
       <li class="nav-item">
-        <a class="nav-link" href="{% url 'currency:rate-latest' %}">the latest rate</a>
+        <a class="nav-link" style="color:white" href="{% url 'currency:rate-latest' %}">real-time rates</a>
       </li>
 
       {% if request.user.is_authenticated %}
         <li class="nav-item">
-          <a class="nav-link" href="{% url 'currency:rate-list' %}">rate list</a>
+          <a class="nav-link" style="color:white" href="{% url 'currency:rate-list' %}">rate archive</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" href="{% url 'currency:source-list' %}">source list</a>
+          <a class="nav-link" style="color:white" href="{% url 'currency:source-list' %}">source list</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" href="{% url 'currency:source-and-rate-list' %}">source&rate list</a>
+          <a class="nav-link" style="color:white" href="{% url 'currency:source-and-rate-list' %}">source&rate list</a>
         </li>
       {% endif %}
 
       <li class="nav-item">
-        <a class="nav-link" href="{% url 'currency:contact-us-create' %}">contact us</a>
+        <a class="nav-link" style="color:white" href="{% url 'currency:contact-us-create' %}">contact us</a>
       </li>
 
+      {% if not request.user.is_authenticated %}
+        <li class="nav-item">
+          <a class="nav-link" style="color:white">and more...</a>
+        </li>
+      {% endif %}
+
     </ul>
-    <span class="navbar-text">
+    <span class="navbar-text" style="color:white">
       {% if request.user.is_authenticated %}
         {{ request.user.first_name }} {{ request.user.last_name }}
         [{{ request.user.email }}]
@@ -62,8 +48,8 @@
         <a class="btn btn-link" href="{% url 'accounts:my-profile' %}">My profile</a>
         <a class="btn btn-link" href="{% url 'logout' %}">Logout</a>
       {% else %}
-        <a class="btn btn-link" href="{% url 'accounts:sign-up' %}">SignUp</a>
-        <a class="btn btn-link" href="{% url 'login' %}">Login</a>
+        <a class="btn btn-link" style="color:yellow" href="{% url 'accounts:sign-up' %}">SignUp</a>
+        <a class="btn btn-link" style="color:yellow" href="{% url 'login' %}">Login</a>
       {% endif %}
     </span>
   </div>

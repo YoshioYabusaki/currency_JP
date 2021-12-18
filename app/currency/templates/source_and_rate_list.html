@@ -4,7 +4,7 @@
 
 {% block main_content %}
 
-<caption><font size="6" style="color:green"><b>Source & Rate List</b></font></caption>
+<caption><font size="6"><b>Source & Rate List</b></font></caption>
 <br><br>
 
   {% for object in object_list %}
@@ -18,7 +18,8 @@
     ID: {{ object.id }}<br>
     Bank name: {{ object.name }}<br>
 
-    <caption><font size="6" style="color:green"><b>Related rates</b></font></caption><br>
+    <caption><font size="4" ><b>Related rates</b></font></caption><br>
+    <br>
 
     <table class="table table-striped">
     <thead>
