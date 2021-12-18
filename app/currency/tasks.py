@@ -132,6 +132,57 @@ def parse_monobank():
 
 
 @shared_task
+def parse_raiffeisenbank():
+    from currency.models import Rate, Source
+
+    currency_url = 'https://raiffeisen.ua/ru/'
+    response = requests.get(currency_url)
+    response.raise_for_status()
+
+    source = Source.objects.get_or_create(
+        code_name=consts.CODE_NAME_RAIFFEISENBANK,
+        defaults={'name': 'Raiffeisenbank'},
+    )[0]
+    soup = BeautifulSoup(response.text, 'html.parser')
+
+    rates = soup.find("div", {"id": "currency-table"})
+    text1 = str(rates.find('currency-table'))
+    list1 = re.sub(r"\D", " ", text1).split()
+
+    usd_buy = round_currency(list1[14] + '.' + list1[15])
+    usd_sale = round_currency(list1[16] + '.' + list1[17])
+    eur_buy = round_currency(list1[0] + '.' + list1[1])
+    eur_sale = round_currency(list1[2] + '.' + list1[3])
+
+    currency_dict = {'ccy': mch.TYPE_USD, 'buy': usd_buy, 'sale': usd_sale}, \
+                    {'ccy': mch.TYPE_EUR, 'buy': eur_buy, 'sale': eur_sale}
+
+    for rate in currency_dict:
+        ct = rate['ccy']
+        buy = rate['buy']
+        sale = rate['sale']
+
+        last_rate = Rate.objects.filter(
+            source=source,
+            type=ct,
+        ).order_by('created').last()
+
+        if (
+                last_rate is None or
+                last_rate.buy != buy or
+                last_rate.sale != sale
+        ):
+            Rate.objects.create(
+                source=source,
+                type=ct,
+                buy=buy,
+                sale=sale,
+            )
+            cache.delete(consts.CACHE_KEY_LATEST_RATES)
+            get_latest_rates()
+
+
+@shared_task
 def parse_ukrgasbank():
     from currency.models import Rate, Source
 
@@ -150,6 +201,56 @@ def parse_ukrgasbank():
     usd_sale = round_currency(rates[1].text) / 100
     eur_buy = round_currency(rates[3].text) / 100
     eur_sale = round_currency(rates[4].text) / 100
+
+    currency_dict = {'ccy': mch.TYPE_USD, 'buy': usd_buy, 'sale': usd_sale}, \
+                    {'ccy': mch.TYPE_EUR, 'buy': eur_buy, 'sale': eur_sale}
+
+    for rate in currency_dict:
+        ct = rate['ccy']
+        buy = rate['buy']
+        sale = rate['sale']
+
+        last_rate = Rate.objects.filter(
+            source=source,
+            type=ct,
+        ).order_by('created').last()
+
+        if (
+                last_rate is None or
+                last_rate.buy != buy or
+                last_rate.sale != sale
+        ):
+            Rate.objects.create(
+                source=source,
+                type=ct,
+                buy=buy,
+                sale=sale,
+            )
+            cache.delete(consts.CACHE_KEY_LATEST_RATES)
+            get_latest_rates()
+
+
+@shared_task
+def parse_oschadbank():
+    from currency.models import Rate, Source
+
+    currency_url = 'https://www.oschadbank.ua/'
+    response = requests.get(currency_url)
+    response.raise_for_status()
+
+    source = Source.objects.get_or_create(
+        code_name=consts.CODE_NAME_OSCHADBANK,
+        defaults={'name': 'oschadbank'},
+    )[0]
+    soup = BeautifulSoup(response.text, 'html.parser')
+
+    rates = str(soup.findAll("span", {'class': ''}))
+    my_list = re.sub(r"\D", " ", rates).split()
+
+    usd_buy = round_currency(my_list[4] + '.' + my_list[5])
+    usd_sale = round_currency(my_list[6] + '.' + my_list[7])
+    eur_buy = round_currency(my_list[0] + '.' + my_list[1])
+    eur_sale = round_currency(my_list[2] + '.' + my_list[3])
 
     currency_dict = {'ccy': mch.TYPE_USD, 'buy': usd_buy, 'sale': usd_sale}, \
                     {'ccy': mch.TYPE_EUR, 'buy': eur_buy, 'sale': eur_sale}

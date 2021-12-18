@@ -3,7 +3,7 @@
 {% load static %}
 
 {% block main_content %}
-<caption><font size="6" style="color:green"><b>Source list</b></font></caption><br>
+<caption><font size="6"><b>Source list</b></font></caption><br>
 
 {% if request.user.is_superuser %}
   <a class="btn btn-outline-primary" href="{% url 'currency:source-create' %}">Create Source</a>
@@ -38,8 +38,12 @@
           {% endif %}
         </td>
         <td>{{ source.name }}</td>
-        <td>{{ source.source_url }}</td>
-
+<!--        <td>{{ source.source_url }}</td>-->
+        <td>
+          <li>
+            <a href="{{ source.source_url }}" target="_blank">{{ source.source_url }}</a>
+          </li>
+        </td>
 
         <!--Action buttons-->
         {% if not request.user.is_authenticated %}
