@@ -26,8 +26,8 @@ LOGIN_REDIRECT_URL = reverse_lazy('index')
 LOGOUT_REDIRECT_URL = reverse_lazy('index')
 
 HTTP_SCHEMA = os.getenv('HTTP_SCHEMA', 'http')
-DOMAIN = os.getenv('DOMAIN', 'localhost:8000')
-
+DOMAIN = os.getenv('DOMAIN', '46.101.210.249')  # 本番環境
+# DOMAIN = os.getenv('DOMAIN', 'localhost:8000')  # 開発環境
 # Application definition
 
 INSTALLED_APPS = [
