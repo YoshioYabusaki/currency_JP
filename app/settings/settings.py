@@ -185,7 +185,8 @@ SUPPORT_EMAIL = 'python.test.yoshio@gmail.com'  # получатель この場
 CELERY_BROKER_URL = 'amqp://{0}:{1}@{2}:{3}//'.format(
     os.environ['RABBITMQ_DEFAULT_USER'],
     os.environ['RABBITMQ_DEFAULT_PASS'],
-    os.getenv('RABBITMQ_DEFAULT_HOST', 'localhost'),
+    # os.getenv('RABBITMQ_DEFAULT_HOST', 'localhost'),  # 開発環境
+    os.getenv('RABBITMQ_DEFAULT_HOST', '46.101.210.249'),  # 本番環境
     os.getenv('RABBITMQ_DEFAULT_PORT', '5672'),
 )
 
