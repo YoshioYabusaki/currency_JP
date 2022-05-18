@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>rates</title>
+</head>
+<body>
+
+<ol>
+    <li>HTML</li>
+    <li>CSS (scss, less)</li>
+    <li>JavaScript (TypeScript)</li>
+</ol>
+
+SPA - single page application
+<ol>
+    <li>React 一番ポピュラー</li>
+    <li>Angular</li>
+    <li>VueJs</li>
+</ol>
+
+<p>
+    Paragraph
+</p>
+
+<ol>
+    <li>item 1</li>
+    <li>item 2</li>
+</ol>
+
+rates
+
+<button onclick="myFunction()">Show Alert</button>
+<br>
+<br>
+<br>
+
+<button id="get-rates-button">Get Rates</button>
+<div id="rates-content">
+</div>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+<script>
+    function myFunction() {
+      alert("i am an alert box!");
+    }
+
+    let a = 4;
+    let b = 5;
+    // alert(a + b);
+    console.log(a + b);
+</script>
+
+<script>
+    $(document).ready(function () {
+        $("#get-rates-button").click(function () {
+
+            $.ajax({
+                url: "https://api.monobank.ua/bank/currency",
+                type: 'GET',
+                dataType: 'json',
+                success: function (res) {
+                    let text;
+                    for (let i = 0; i < res.length; i++) {
+                        if (res[i].rateBuy !== undefined){
+                            text += `Buy: ${res[i].rateBuy} Sell: ${res[i].rateSell}<br>`;
+                        }
+                    }
+                    text = `<div>${text}</div>`;
+                    $("#rates-content").html(text);
+                    console.log(text);
+                }
+            });
+
+        });
+    });
+</script>
+
+</body>
+</html>

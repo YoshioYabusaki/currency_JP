@@ -26,8 +26,8 @@ LOGIN_REDIRECT_URL = reverse_lazy('index')
 LOGOUT_REDIRECT_URL = reverse_lazy('index')
 
 HTTP_SCHEMA = os.getenv('HTTP_SCHEMA', 'http')
-DOMAIN = os.getenv('DOMAIN', '159.223.29.191')  # 本番環境
-# DOMAIN = os.getenv('DOMAIN', 'localhost:8000')  # 開発環境
+# DOMAIN = os.getenv('DOMAIN', '159.223.29.191')  # 本番環境
+DOMAIN = os.getenv('DOMAIN', 'localhost:8000')  # 開発環境
 # Application definition
 
 INSTALLED_APPS = [
@@ -37,7 +37,6 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-
     'django_extensions',
     'debug_toolbar',
     'rangefilter',
@@ -185,8 +184,8 @@ SUPPORT_EMAIL = 'python.test.yoshio@gmail.com'  # получатель この場
 CELERY_BROKER_URL = 'amqp://{0}:{1}@{2}:{3}//'.format(
     os.environ['RABBITMQ_DEFAULT_USER'],
     os.environ['RABBITMQ_DEFAULT_PASS'],
-    # os.getenv('RABBITMQ_DEFAULT_HOST', 'localhost'),  # 開発環境
-    os.getenv('RABBITMQ_DEFAULT_HOST', '159.223.29.191'),  # 本番環境
+    os.getenv('RABBITMQ_DEFAULT_HOST', 'localhost'),  # 開発環境
+    # os.getenv('RABBITMQ_DEFAULT_HOST', '159.223.29.191'),  # 本番環境
     os.getenv('RABBITMQ_DEFAULT_PORT', '5672'),
 )
 

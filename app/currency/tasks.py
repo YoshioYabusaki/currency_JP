@@ -135,7 +135,7 @@ def parse_monobank():
 def parse_raiffeisenbank():
     from currency.models import Rate, Source
 
-    currency_url = 'https://raiffeisen.ua/ru/'
+    currency_url = 'https://minfin.com.ua/company/aval/currency/'
     response = requests.get(currency_url)
     response.raise_for_status()
 
@@ -145,14 +145,13 @@ def parse_raiffeisenbank():
     )[0]
     soup = BeautifulSoup(response.text, 'html.parser')
 
-    rates = soup.find("div", {"id": "currency-table"})
-    text1 = str(rates.find('currency-table'))
-    list1 = re.sub(r"\D", " ", text1).split()
+    rates = soup.find("table", {"class": "currency-data"})
+    the_list = list(rates.findAll('td'))
 
-    usd_buy = round_currency(list1[14] + '.' + list1[15])
-    usd_sale = round_currency(list1[16] + '.' + list1[17])
-    eur_buy = round_currency(list1[0] + '.' + list1[1])
-    eur_sale = round_currency(list1[2] + '.' + list1[3])
+    usd_buy = round_currency((the_list[5].text.replace("\n", ""))[0:5])
+    usd_sale = round_currency((the_list[6].text.replace("\n", ""))[0:5])
+    eur_buy = round_currency((the_list[9].text.replace("\n", ""))[0:5])
+    eur_sale = round_currency((the_list[10].text.replace("\n", ""))[0:5])
 
     currency_dict = {'ccy': mch.TYPE_USD, 'buy': usd_buy, 'sale': usd_sale}, \
                     {'ccy': mch.TYPE_EUR, 'buy': eur_buy, 'sale': eur_sale}
@@ -186,7 +185,7 @@ def parse_raiffeisenbank():
 def parse_ukrgasbank():
     from currency.models import Rate, Source
 
-    currency_url = 'https://www.ukrgasbank.com/'
+    currency_url = 'https://minfin.com.ua/company/ukrgasbank/currency/'
     response = requests.get(currency_url)
 
     source = Source.objects.get_or_create(
@@ -195,12 +194,13 @@ def parse_ukrgasbank():
     )[0]
     soup = BeautifulSoup(response.text, 'html.parser')
 
-    rates = soup.find_all("td", {"class": "val"})
+    rates = soup.find("table", {"class": "currency-data"})
+    the_list = list(rates.findAll('td'))
 
-    usd_buy = round_currency(rates[0].text) / 100
-    usd_sale = round_currency(rates[1].text) / 100
-    eur_buy = round_currency(rates[3].text) / 100
-    eur_sale = round_currency(rates[4].text) / 100
+    usd_buy = round_currency((the_list[5].text.replace("\n", ""))[0:5])
+    usd_sale = round_currency((the_list[6].text.replace("\n", ""))[0:5])
+    eur_buy = round_currency((the_list[9].text.replace("\n", ""))[0:5])
+    eur_sale = round_currency((the_list[10].text.replace("\n", ""))[0:5])
 
     currency_dict = {'ccy': mch.TYPE_USD, 'buy': usd_buy, 'sale': usd_sale}, \
                     {'ccy': mch.TYPE_EUR, 'buy': eur_buy, 'sale': eur_sale}
@@ -294,15 +294,12 @@ def parse_otpbank():
         defaults={'name': 'otpbank'},
     )[0]
     soup = BeautifulSoup(response.text, 'html.parser')
-    data = soup.find("td", {"class": "currency-list__value"})
+    rates = soup.findAll("td", {'class': 'currency-list__value'})
 
-    usd_buy = round_currency(data.text)
-    usd_sale = round_currency(data.next_element.next_element.next_element.text)
-    eur_buy = round_currency(data.next_element.next_element.next_element.next_element.next_element.next_element.
-                             next_element.next_element.next_element.next_element.next_element.next_element.text)
-    eur_sale = round_currency(data.next_element.next_element.next_element.next_element.next_element.next_element.
-                              next_element.next_element.next_element.next_element.next_element.next_element.
-                              next_element.next_element.next_element.text)
+    usd_buy = round_currency(rates[0].text)
+    usd_sale = round_currency(rates[2].text)
+    eur_buy = round_currency(rates[1].text)
+    eur_sale = round_currency(rates[3].text)
 
     currency_dict = {'ccy': mch.TYPE_USD, 'buy': usd_buy, 'sale': usd_sale}, \
                     {'ccy': mch.TYPE_EUR, 'buy': eur_buy, 'sale': eur_sale}
@@ -537,6 +534,57 @@ def parse_privatbank_archive():
     #                 the_rate.created = the_datetime
     #                 the_rate.save()
     #                 print(f'object created: {the_date}')  # noqa
+
+
+# def parse_raiffeisenbank():
+#     from currency.models import Rate, Source
+#
+#     currency_url = 'https://raiffeisen.ua/ru/'
+#     response = requests.get(currency_url)
+#     response.raise_for_status()
+#
+#     source = Source.objects.get_or_create(
+#         code_name=consts.CODE_NAME_RAIFFEISENBANK,
+#         defaults={'name': 'Raiffeisenbank'},
+#     )[0]
+#     soup = BeautifulSoup(response.text, 'html.parser')
+#
+#     rates = soup.find("div", {"id": "currency-table"})
+#     text1 = str(rates.find('currency-table'))
+#     list1 = re.sub(r"\D", " ", text1).split()
+#
+#     usd_buy = round_currency(list1[14] + '.' + list1[15])
+#     usd_sale = round_currency(list1[16] + '.' + list1[17])
+#     eur_buy = round_currency(list1[0] + '.' + list1[1])
+#     eur_sale = round_currency(list1[2] + '.' + list1[3])
+#
+#     currency_dict = {'ccy': mch.TYPE_USD, 'buy': usd_buy, 'sale': usd_sale}, \
+#                     {'ccy': mch.TYPE_EUR, 'buy': eur_buy, 'sale': eur_sale}
+#
+#     for rate in currency_dict:
+#         ct = rate['ccy']
+#         buy = rate['buy']
+#         sale = rate['sale']
+#
+#         last_rate = Rate.objects.filter(
+#             source=source,
+#             type=ct,
+#         ).order_by('created').last()
+#
+#         if (
+#                 last_rate is None or
+#                 last_rate.buy != buy or
+#                 last_rate.sale != sale
+#         ):
+#             Rate.objects.create(
+#                 source=source,
+#                 type=ct,
+#                 buy=buy,
+#                 sale=sale,
+#             )
+#             cache.delete(consts.CACHE_KEY_LATEST_RATES)
+#             get_latest_rates()
+
 
 # @shared_task
 # def debug_task(sleep_time: int = 5):
