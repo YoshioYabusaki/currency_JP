@@ -9,14 +9,19 @@ import requests
 def round_currency(num) -> object:
     return Decimal(num).quantize(Decimal('.01'))
 
-currency_url = 'https://alfabank.ua/currency-exchange'
+currency_url = 'https://www.smbc.co.jp/ex/ExchangeServlet?ScreenID=real'
 response = requests.get(currency_url)
 response.raise_for_status()
 soup = BeautifulSoup(response.text, 'html.parser')
 
-rates = soup.find_all("h4", {"class": "exchange-rate-tabs__info-value"})
+rates = soup.find_all("td", {"class": "tRight num"})
 
-print(rates[0].text.strip())
+usd_ttb = round_currency(rates[0].text)
+usd_tts = round_currency(rates[1].text)
+eur_ttb = round_currency(rates[2].text)
+eur_tts = round_currency(rates[3].text)
+
+print(usd_ttb, usd_tts, eur_ttb, eur_tts)
 
 
 # print(usd_buy, usd_sale, eur_buy, eur_sale)
